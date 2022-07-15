@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from .models import Customer
 from rest_framework.response import Response
-from PracticeAPI.serializers import CustomerSerializer
+from ExploreAPI.serializers import CustomerSerializer
 from rest_framework import status
 from functools import wraps
 # from business.customFunc import resource_checker
