@@ -19,11 +19,17 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('auth/', include('auth.urls')),
     path('api/', include('api.urls')),
     path('api/admin/', include('admin_app.urls')),
-    path('auth/', include('auth.urls')),
-    #path('auth/', include('djoser.urls')),
+    path('api/tours/', include('tours.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

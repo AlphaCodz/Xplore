@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 class CustomerList(generics.ListAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-    permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser)
+    permission_classes = (permissions.IsAdminUser, )
 
     def get_queryset(self):
         page = self.request.GET.get("page")

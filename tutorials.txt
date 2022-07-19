@@ -1,0 +1,3 @@
+https://djangocentral.com/uploading-images-with-django/
+
+https://www.codingforentrepreneurs.com/blog/how-to-create-a-custom-django-user-model/
