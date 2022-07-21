@@ -1,5 +1,7 @@
+from enum import unique
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from phonenumber_field.modelfields import PhoneNumberField
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -33,6 +35,8 @@ class Customer(AbstractUser):
     middle_name = models.CharField(max_length=60)
     email = models.EmailField(unique=True)
     username = models.CharField(blank=True, max_length=20)
+    phone_number = PhoneNumberField(null=True, unique=True)
+    
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
