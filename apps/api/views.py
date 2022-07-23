@@ -1,9 +1,10 @@
 import email
+from urllib.parse import uses_params
 from .serializers import CustomerSerializer, RegisterSerilizer
 from rest_framework import generics, permissions
 from .models import Customer
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 # Create your views here.
 class CustomerList(generics.ListAPIView):
@@ -26,20 +27,10 @@ class RegisterCustomer(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = RegisterSerilizer
 
-@csrf_exempt
-def register_customer(request):
-    if request.method == "POST":
-        formdata = request.POST
-        required = []
-        if not formdata.get("first_name"):
-            required.append("first_name is required")
-
-        errors = []
-        if Customer.objects.get(email= formdata["email"]):
-            errors.append("this email is already registered")
-        
-
-        res = {}
-        return JsonResponse(res)
-    else:
-        return JsonResponse({"detail": "method not allowed"}, status=405)
+class CustomerDetail(APIView):
+    permission_classes= (permissions.IsAuthenticated,)
+    def get(self, request, format=None):
+        user = request.user
+        if request.user:
+            serializer = CustomerSerializer(user)
+            return Response(serializer.data)

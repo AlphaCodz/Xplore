@@ -25,7 +25,7 @@ class RegisterSerilizer(serializers.ModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ('password', 'password2', 'email', 'first_name', 'last_name', 'phone_number')
+        fields = ("id", 'password', 'password2', 'email', 'first_name', 'last_name', 'phone_number',)
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True},
