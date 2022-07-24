@@ -21,7 +21,10 @@ class CustomRenderer(JSONRenderer):
             data["details"] = []
             for i in data:
                 if i != "details":
-                    data["details"].append(f"{i}: {data[i][0]}")
+                    if data[i][0] == "This field must be unique.":
+                        data["details"].append(f"{i}: This {i} is already taken")
+                    else:
+                        data["details"].append(f"{i}: {data[i][0]}")
             for i in list(data.keys()):
                 if i != "details":
                     del data[i]
