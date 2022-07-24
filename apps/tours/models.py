@@ -1,5 +1,3 @@
-from distutils.command.upload import upload
-from unicodedata import category
 from django.db import models
 from api.models import Customer
 

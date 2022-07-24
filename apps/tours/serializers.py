@@ -1,4 +1,3 @@
-from dataclasses import fields
 from rest_framework import serializers
 from .models import Tour, Booking, Package, Visa, Passport
 
@@ -14,12 +13,14 @@ class BookingSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'tour': {'required': False},
             'agent': {'required': False},
-            'package': {'required':False}
+            'package': {'required':True},
+            'id':{'required':True},
+            'individuals': {'required':False},
         }
 
     def create(self, validated_data):
         request = self.context["request"]
-        package_id = int(request.POST.get("package_id"))
+        package_id = int(request.POST.get("package"))
         package = Package.objects.get(id=package_id)
         booking = Booking.objects.create(
             customer = request.user,
@@ -27,7 +28,7 @@ class BookingSerializer(serializers.ModelSerializer):
             agent = package.agent,
             tour = package.tour,
             category = validated_data["category"],
-            individuals = int(validated_data["individuals"])
+            individuals = validated_data.get("individuals")
         )
         booking.save()
         files = request.FILES
