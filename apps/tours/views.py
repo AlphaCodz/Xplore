@@ -2,7 +2,7 @@ from struct import pack
 from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework import generics, permissions
-from .models import Tour, Package, Agent, Booking
+from .models import Tour, Package, Agent, Booking, Passport, Visa
 from .serializers import TourSerializer, BookingSerializer
 
 # Create your views here.
@@ -20,11 +20,13 @@ class BookTour(generics.CreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
-        """user = self.request.user
-        package_id = int(self.request.POST.get("package_id"))
-        package = Package.objects.get(package_id)
-        print(package)"""
-        return super().post(request, *args, **kwargs)
+        """files = request.FILES
+        file_fields = ["passport1", "passport2", "passport3"]
+        for fields in file_fields:
+            if files.get(fields):
+                print("got")"""
+        result = super().post(request, *args, **kwargs)
+        return result
 
 
 def tourPackageList(request, id):

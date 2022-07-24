@@ -55,19 +55,25 @@ class Booking(models.Model):
         ("A", "approved"),
         ("D", "declined"),
     )
+    INDIVIDUAL_CHOICES = (
+        (3, 3),
+        (4, 4),
+        (5, 5),
+    )
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
     agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
     package = models.ForeignKey(Package, on_delete=models.CASCADE)
     category = models.CharField(max_length=5, choices=CATEGORY_CHOICES)
+    individuals = models.IntegerField(choices=INDIVIDUAL_CHOICES, null=True)
     paid = models.BooleanField(default=False)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
 class Visa(models.Model):
-    image = models.ImageField(upload_to="visa/y/%m/%d/")
+    image = models.ImageField(upload_to="visa/%y/%m/%d/")
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
 
 class Passport(models.Model):
-    image = models.ImageField(upload_to="passport/y/%m/%d/")
-    Booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="passport/%y/%m/%d/")
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
