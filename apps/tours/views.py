@@ -19,16 +19,6 @@ class BookTour(generics.CreateAPIView):
     serializer_class = BookingSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-    def post(self, request, *args, **kwargs):
-        """files = request.FILES
-        file_fields = ["passport1", "passport2", "passport3"]
-        for fields in file_fields:
-            if files.get(fields):
-                print("got")"""
-        result = super().post(request, *args, **kwargs)
-        return result
-
-
 def tourPackageList(request, id):
     tour = Tour.objects.get(id=id)
     packages = Package.objects.filter(tour=tour)
@@ -54,5 +44,12 @@ def tourPackageList(request, id):
         package_list.append(package_json)
 
     data = {"packages": package_list}
-
     return JsonResponse(data)
+
+class BookingList(generics.ListAPIView):
+    serializer_class = BookingSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def get_queryset(self):
+        qs = Booking.objects.filter(customer= self.request.user)
+        return qs

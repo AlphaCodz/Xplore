@@ -9,7 +9,7 @@ class TourSerializer(serializers.ModelSerializer):
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
-        fields = ("id", "category", "agent", "tour", "package", "individuals")
+        fields = ("id", "category", "agent__name", "tour", "package", "individuals")
         extra_kwargs = {
             'tour': {'required': False},
             'agent': {'required': False},
