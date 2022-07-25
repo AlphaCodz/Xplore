@@ -1,3 +1,4 @@
+from operator import ge
 from struct import pack
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -52,4 +53,18 @@ class BookingList(generics.ListAPIView):
     
     def get_queryset(self):
         qs = Booking.objects.filter(customer= self.request.user).prefetch_related("agent", "tour", "package").order_by("-id")
+        return qs
+
+class BookingDetail(generics.RetrieveAPIView):
+    serializer_class = BookingSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        print("here")
+        qs = Booking.objects.get(id= self.kwargs["pk"])
+        print(qs)
+        return qs
+    
+    def get_object(self):
+        qs = self.get_queryset()
         return qs

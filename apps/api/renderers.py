@@ -48,9 +48,8 @@ class CustomeLoginRenderer(JSONRenderer):
                 response["data"] = data
             data["details"] = ""
             for i in data:
-                print(data[i])
                 if i != "details":
-                    data["details"] += data[i]
+                    data["details"] += f"{i}: {data[i][0]}\n"
             for i in list(data.keys()):
                 if i != "details":
                     del data[i]

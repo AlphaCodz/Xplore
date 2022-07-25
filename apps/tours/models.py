@@ -58,7 +58,7 @@ class Booking(models.Model):
         (4, 4),
         (5, 5),
     )
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, related_name="customer")
     agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
     package = models.ForeignKey(Package, on_delete=models.CASCADE)
