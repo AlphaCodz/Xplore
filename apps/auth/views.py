@@ -8,4 +8,3 @@ from api.renderers import CustomRenderer
 class MyTokenObtainPairView(TokenObtainPairView):
     permission_classes = (AllowAny,)
     serializer_class = MyTokenObtainPairSerializer
-    renderer_classes = (CustomRenderer,)
