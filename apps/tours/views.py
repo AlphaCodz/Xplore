@@ -6,6 +6,11 @@ from rest_framework import generics, permissions
 from .models import Tour, Package, Agent, Booking, Passport, Visa
 from .serializers import TourSerializer, BookingSerializer
 
+class DetailBookingPermission(permissions.BasePermission):
+    message = "you are not permitted to view this document"
+    def has_permission(self, request, view):
+        return view.get_object().customer == request.user
+
 # Create your views here.
 class TourList(generics.ListAPIView):
     queryset = Tour.objects.all()
@@ -57,7 +62,7 @@ class BookingList(generics.ListAPIView):
 
 class BookingDetail(generics.RetrieveAPIView):
     serializer_class = BookingSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (DetailBookingPermission, permissions.IsAuthenticated)
 
     def get_queryset(self):
         print("here")
