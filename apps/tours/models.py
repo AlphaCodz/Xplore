@@ -70,8 +70,12 @@ class Booking(models.Model):
 
 class Visa(models.Model):
     image = models.ImageField(upload_to="visa/%y/%m/%d/")
-    booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name="visa")
+    def __str__(self):
+        return f"/media/{self.image}"
 
 class Passport(models.Model):
     image = models.ImageField(upload_to="passport/%y/%m/%d/")
-    booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name="passports")
+    def __str__(self):
+        return f"/media/{self.image}"

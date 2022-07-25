@@ -7,9 +7,14 @@ class TourSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "description", "details", "location", "start_date", "end_date", "image")
 
 class BookingSerializer(serializers.ModelSerializer):
+    agent = serializers.StringRelatedField()
+    tour = serializers.StringRelatedField()
+    package = serializers.StringRelatedField()
+    visa = serializers.StringRelatedField(many=True, read_only=True)
+    passports = serializers.StringRelatedField(many=True)
     class Meta:
         model = Booking
-        fields = ("id", "category", "agent__name", "tour", "package", "individuals")
+        fields = ("id", "category", "agent", "tour", "package", "individuals", "status", "paid", "visa", "passports")
         extra_kwargs = {
             'tour': {'required': False},
             'agent': {'required': False},

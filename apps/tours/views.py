@@ -51,5 +51,5 @@ class BookingList(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     
     def get_queryset(self):
-        qs = Booking.objects.filter(customer= self.request.user)
+        qs = Booking.objects.filter(customer= self.request.user).prefetch_related("agent", "tour", "package").order_by("-id")
         return qs
