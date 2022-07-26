@@ -1,17 +1,26 @@
-from operator import ge
-from struct import pack
-from django.shortcuts import render
+from urllib import response
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from rest_framework import generics, permissions
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
 from .models import Tour, Package, Agent, Booking, Passport, Visa
 from .serializers import TourSerializer, BookingSerializer
+from .payment import Paystack
 
 class DetailBookingPermission(permissions.BasePermission):
     message = "you are not permitted to view this document"
     def has_permission(self, request, view):
         return view.get_object().customer == request.user
 
-# Create your views here.
+class MustBeCustomerBooking(permissions.BasePermission):
+    message = "This booking doesnt belong to this customer"
+    def has_permission(self, request, view):
+        pk = request.resolver_match.kwargs.get("pk")
+        booking = get_object_or_404(Booking, pk=pk)
+        return request.user == booking.customer 
+
 class TourList(generics.ListAPIView):
     queryset = Tour.objects.all()
     serializer_class = TourSerializer
@@ -73,3 +82,18 @@ class BookingDetail(generics.RetrieveAPIView):
     def get_object(self):
         qs = self.get_queryset()
         return qs
+
+@api_view(["post"])
+@permission_classes([MustBeCustomerBooking])
+def pay(request, pk):
+    data = {}
+    return Response(data)
+
+class PayForBooking(generics.UpdateAPIView):
+    serializer_class = BookingSerializer
+    def get_object(self):
+        pk = self.kwargs["pk"]
+        return get_object_or_404(Booking, pk=pk)
+    
+    def put(self, request, *args, **kwargs):
+        return Response({})

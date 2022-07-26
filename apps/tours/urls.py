@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     TourList, tourPackageList, BookTour, 
-    BookingList, BookingDetail
+    BookingList, BookingDetail, pay, PayForBooking
     )
 
 urlpatterns = [
@@ -10,4 +10,5 @@ urlpatterns = [
     path('book', BookTour.as_view(), name='book-tour'),
     path('bookings', BookingList.as_view(), name='booking-list'),
     path('booking/<pk>/detail', BookingDetail.as_view(), name='booking-detail'),
+    path('booking/<pk>/pay', PayForBooking.as_view() , name="pay"),
 ]
