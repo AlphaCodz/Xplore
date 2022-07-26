@@ -65,6 +65,7 @@ class Booking(models.Model):
     category = models.CharField(max_length=5, choices=CATEGORY_CHOICES)
     individuals = models.IntegerField(choices=INDIVIDUAL_CHOICES, null=True)
     paid = models.BooleanField(default=False)
+    payment_reference = models.CharField(max_length=30, null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 

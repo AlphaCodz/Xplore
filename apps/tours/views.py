@@ -96,4 +96,53 @@ class PayForBooking(generics.UpdateAPIView):
         return get_object_or_404(Booking, pk=pk)
     
     def put(self, request, *args, **kwargs):
-        return Response({})
+        P = Paystack()
+        user = request.user
+        booking = self.get_object()
+        if not booking.payment_reference:
+            amount = booking.package.price * 100
+            email = user.email
+            try:
+                payment = P.initialize_payment(amount, email)
+            except:
+                return Response({
+                    "detail": "Some error occured"
+                },502)
+            authorization_url = payment["data"]["authorization_url"]
+            reference = payment["data"]["reference"]
+            data = {
+                "authorization_url": authorization_url,
+                "reference": reference,
+            }
+            booking.payment_reference = reference
+            booking.save()
+            return Response(data)
+        else:
+            data = P.verify_transaction(booking.payment_reference)
+            if data["data"]["status"] == "success":
+                booking.paid = True
+                booking.save()
+                return Response({
+                    "details":"Paid",
+                })
+            
+            else:
+                booking.payment_reference = None
+                booking.save()
+                amount = booking.package.price * 100
+                email = user.email
+                try:
+                    payment = P.initialize_payment(amount, email)
+                except:
+                    return Response({
+                        "detail": "Some error occured"
+                    },502)
+                authorization_url = payment["data"]["authorization_url"]
+                reference = payment["data"]["reference"]
+                data = {
+                    "authorization_url": authorization_url,
+                    "reference": reference,
+                }
+                booking.payment_reference = reference
+                booking.save()
+                return Response(data)
