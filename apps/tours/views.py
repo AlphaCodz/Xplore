@@ -91,6 +91,7 @@ def pay(request, pk):
 
 class PayForBooking(generics.UpdateAPIView):
     serializer_class = BookingSerializer
+    permission_classes = (DetailBookingPermission,)
     def get_object(self):
         pk = self.kwargs["pk"]
         return get_object_or_404(Booking, pk=pk)
