@@ -45,5 +45,5 @@ class Customer(AbstractUser):
     objects = UserManager()
 
     def __str__(self):
-        return f"{self.first_name} {self.last_login}"
+        return f"{self.first_name} {self.last_name}"
 
