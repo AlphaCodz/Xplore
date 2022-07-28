@@ -28,9 +28,6 @@ class RegisterCustomer(generics.CreateAPIView):
     serializer_class = RegisterSerilizer
     renderer_classes = [CustomRenderer,]
 
-
-    
-
 class CustomerDetail(APIView):
     permission_classes= (permissions.IsAuthenticated,)
     def get(self, request, format=None):

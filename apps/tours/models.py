@@ -40,6 +40,9 @@ class Guide(models.Model):
     name = models.CharField(max_length=50)
     agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="guides/", null=True)
+    
+    def __str__(self):
+        return f"Company: {self.agent} ____ Guide: {self.name}"
 
 class Booking(models.Model):
     CATEGORY_CHOICES = (
@@ -58,6 +61,7 @@ class Booking(models.Model):
         (4, 4),
         (5, 5),
     )
+    
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, related_name="customer")
     agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
@@ -68,6 +72,9 @@ class Booking(models.Model):
     payment_reference = models.CharField(max_length=30, null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
+    
+    def __str__(self):
+        return f"{self.customer} {self.status}"
 
 class Visa(models.Model):
     image = models.ImageField(upload_to="visa/%y/%m/%d/")

@@ -2,7 +2,6 @@ from urllib import response
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from rest_framework import generics, permissions
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from .models import Tour, Package, Agent, Booking, Passport, Visa
