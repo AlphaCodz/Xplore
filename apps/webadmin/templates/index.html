@@ -202,13 +202,13 @@
                               
                             
                                     
-                            {% for names in query %}
+                            {% for booking in query %}
                                     <tbody>
                                         <tr class="border-y-[1px]">
                                             <td>
                                                 <div class="py-4">
-                                                    <p class="font-bold">{{names}}</p>
-                                                    <p class="text-[11px]">3 mins ago</p>
+                                                    <p class="font-bold">{{booking.customer.first_name}} {{booking.customer.last_name}}</p>
+                                                    <p class="text-[11px]">{{booking.created_at}}</p>
                                                 </div>
                                             </td>
                                             <td class="text-right">
