@@ -5,5 +5,5 @@ app_name = "webadmin"
 
 urlpatterns = [
     re_path(r'^index/$', views.index, name="index"),
-    re_path(r'^$', views.userinfo, name="pending")
+    #re_path(r'^$', views.userinfo, name="pending"),
 ]

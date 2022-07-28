@@ -13,6 +13,10 @@ from datetime import timedelta
 from pathlib import Path
 import os
 import sys
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +26,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4o%8s3lhq0#-7!wrx+08@i(-#6n_a9dy*+==)+av%27)@(vc6*'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -88,11 +92,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'explore', 
+        'NAME': env('DB_NAME'), 
         'USER': 'postgres', 
-        'PASSWORD': 'Bruks888,',
-        'HOST': '127.0.0.1', 
-        'PORT': '5432',
+        'PASSWORD': env("DB_PASSWORD"),
+        'HOST': env('DB_HOST'), 
+        'PORT': env('DB_PORT'),
     }
 }
 
