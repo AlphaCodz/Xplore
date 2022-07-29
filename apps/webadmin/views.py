@@ -31,7 +31,6 @@ def index(request):
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([permissions.IsAdminUser])
-
 def approved(request):
     approved = Booking.objects.filter(status="A").prefetch_related("customer")
     
