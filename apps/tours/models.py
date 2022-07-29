@@ -1,5 +1,7 @@
+from email.policy import default
 from django.db import models
 from api.models import Customer
+from djmoney.models.fields import MoneyField
 
 # Create your models here.
 class Tour(models.Model):
@@ -32,7 +34,7 @@ class Package(models.Model):
     take_off_date = models.DateField(null=True)
     return_date = models.DateField(null=True)
     take_off_time = models.DateTimeField(null=True)
-    price = models.BigIntegerField(null=True)
+    price = MoneyField(max_digits=19, decimal_places=4, default_currency="NGN", null=True)
     def __str__(self):
         return f"{self.agent}: {self.tour}: {self.name}"
 

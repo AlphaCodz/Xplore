@@ -50,11 +50,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'phonenumber_field',
+    'djmoney',
 
     #local apps
     'api',
     'tours',
-    'webadmin'
+    'webadmin',
 ]
 
 MIDDLEWARE = [
@@ -94,8 +95,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env("DB_NAME"), 
-        'USER': env("DB_USER"),
+        'NAME': env('DB_NAME'), 
+        'USER': 'postgres', 
         'PASSWORD': env("DB_PASSWORD"),
         'HOST': env('DB_HOST'), 
         'PORT': env('DB_PORT'),
