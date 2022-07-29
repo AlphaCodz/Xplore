@@ -7,7 +7,7 @@ from rest_framework.decorators import permission_classes, api_view, authenticati
 from rest_framework import generics, permissions
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
-# Create your views here.
+# Create your views here. INDEX PAGE
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([permissions.IsAdminUser])
@@ -27,36 +27,58 @@ def index(request):
         "query":query,
     }
     return render(request, 'index.html', context)
+                    
+                    # APPROVED PAGE
 
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([permissions.IsAdminUser])
-
 def approved(request):
     approved = Booking.objects.filter(status="A").prefetch_related("customer")
     
     context = {
-        "approved": approved
+        "approved": approved,
+        "navbar":"approved"
     }
     return render(request, "approved.html", context)
 
+                                        # DECLINED PAGE
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([permissions.IsAdminUser])
 
 def declined(request):
-    return render(request, 'declined.html')
+    declined = Booking.objects.filter(status="D").prefetch_related("customer")
+    
+    context = {
+        "declined": declined,
+    }
+    return render(request, 'declined.html', context)
+
+                                         # PAID PAGE
 
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([permissions.IsAdminUser])
-
 def paid(request):
-    return render(request, 'paid.html')
+    paid = Booking.objects.filter(paid=True).prefetch_related("customer")
+    
+    context = {
+        "paid": paid,
+    }
+    return render(request, 'paid.html', context)
 
+
+
+                            #  PENDING PAGE
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([permissions.IsAdminUser])
-
 def pending(request):
-    return render(request, 'pending.html')
+
+    pending = Booking.objects.filter(status="D").prefetch_related("customer")
+    
+    context = {
+        "pending": pending,
+    }
+    return render(request, 'pending.html', context)
