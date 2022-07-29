@@ -21,12 +21,14 @@ environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = 'django-insecure-4o%8s3lhq0#-7!wrx+08@i(-#6n_a9dy*+==)+av%27)@(vc6*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -70,7 +72,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -92,17 +94,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env('DB_NAME'), 
-        'USER': 'postgres', 
-<<<<<<< HEAD
-        'PASSWORD': 'ALeader102030,',
-        'HOST': '127.0.0.1', 
-        'PORT': '5433',
-=======
+        'NAME': env("DB_NAME"), 
+        'USER': env("DB_USER"),
         'PASSWORD': env("DB_PASSWORD"),
         'HOST': env('DB_HOST'), 
         'PORT': env('DB_PORT'),
->>>>>>> 47845c2f25d6e95d1d8d59060d5dd21fa14fbde2
     }
 }
 
@@ -169,6 +165,5 @@ SIMPLE_JWT = {
 # Base url to serve media files
 MEDIA_URL = '/media/'
 
-# Path where media is stored
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 
