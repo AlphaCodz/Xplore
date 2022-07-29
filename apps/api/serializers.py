@@ -9,7 +9,7 @@ import re
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ("id", "first_name", "last_name", "middle_name", "email", "gender", "status")
+        fields = ("id", "first_name", "last_name", "middle_name", "email", "gender", "status","phone_number")
 
 class RegisterSerilizer(serializers.ModelSerializer):
     email = serializers.EmailField(
