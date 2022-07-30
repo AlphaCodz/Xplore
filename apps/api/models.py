@@ -49,7 +49,8 @@ class Customer(AbstractUser):
     username = models.CharField(blank=True, max_length=20)
     phone_number = PhoneNumberField(null=True, unique=True)
     verified_email = models.BooleanField(default=False)
-    verified_phonenumber = models.BooleanField(default=False)
+    verified_phonenumber = models.BooleanField(default=False, null=True)
+    staff_id_no = models.CharField(max_length=7, unique=True, null=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

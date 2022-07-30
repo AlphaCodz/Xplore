@@ -17,7 +17,6 @@ def index(request):
     declined = Booking.objects.filter(status="D").count()
     paid = Booking.objects.filter(paid = True).count()
     query = Booking.objects.filter(status="P").prefetch_related("customer")
-    
 
     context = {
         "pending": pending,
@@ -76,8 +75,7 @@ def paid(request):
 @permission_classes([permissions.IsAdminUser])
 def pending(request):
 
-    pending = Booking.objects.filter(status="D").prefetch_related("customer")
-    
+    pending = Booking.objects.filter(status="P").prefetch_related("customer")
     context = {
         "pending": pending,
     }

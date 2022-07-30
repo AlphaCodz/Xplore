@@ -5,8 +5,8 @@
     <nav id="header" class="bg-white fixed w-full z-10 top-0 shadow">
         <div class="w-full container mx-auto flex flex-wrap items-center mt-0 pt-3 pb-3 md:pb-4">
             <div class="w-1/2 pl-2 md:pl-0">
-                <a class=" text-gray-900 text-base xl:text-xl no-underline hover:no-underline font-bold" href="index.html">
-                    <i class="fas fa-sun text-blue-300 pr-3"></i> Admin Panel
+                <a class=" text-gray-900 text-base xl:text-xl no-underline hover:no-underline font-bold" href="{% url 'webadmin:index' %}">
+                    <i class="fas fa-sun text-blue-300 pr-3"></i> Explore
                 </a>
             </div>
             <div class="w-1/2 pr-0">
@@ -64,7 +64,7 @@
                     </li>
                     <li class="mr-6 my-2 md:my-0">
                         <a href="{% url 'webadmin:declined' %}" class="block py-1 md:py-3 pl-1 align-middle text-gray-500 no-underline hover:text-gray-900 border-b-2 border-white hover:border-blue-300">
-                            <i class="fas fa-user-minus fa-fw mr-3"></i><span class="pb-1 md:pb-0 text-sm">declined Requests</span>
+                            <i class="fas fa-user-minus fa-fw mr-3"></i><span class="pb-1 md:pb-0 text-sm">Declined Requests</span>
                         </a>
                     </li>
                 </ul>
@@ -84,7 +84,7 @@
         <!--approved request page/section-->
         <section id="approved-page" class="w-full bg-sky-50 px-6 md:px-12">
             <h1 class="text-[25px] md:text-[40px] font-bold text-center mb-8">Approved Request</h1>
-            <a href="index.html"><button class="bg-white hover:bg-slate-50 border-white border-[3px] rounded-md mb-10 px-4 py-1 font-medium"><i class="fas fa-arrow-left text-blue-300 pr-2 text-[16px]"></i>Back</button></a>
+            <a href="{% url 'webadmin:index' %}"><button class="bg-white hover:bg-slate-50 border-white border-[3px] rounded-md mb-10 px-4 py-1 font-medium"><i class="fas fa-arrow-left text-blue-300 pr-2 text-[16px]"></i>Back</button></a>
             <div class="w-full bg-white p-5 md:p-10 rounded-md shadow-md">
                 <table class="w-full p-5 text-gray-700 md:text-[25px]">
                     <thead>
