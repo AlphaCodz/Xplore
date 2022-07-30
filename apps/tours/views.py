@@ -73,9 +73,7 @@ class BookingDetail(generics.RetrieveAPIView):
     permission_classes = (DetailBookingPermission, permissions.IsAuthenticated)
 
     def get_queryset(self):
-        print("here")
         qs = Booking.objects.get(id= self.kwargs["pk"])
-        print(qs)
         return qs
     
     def get_object(self):
