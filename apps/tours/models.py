@@ -36,7 +36,7 @@ class Package(models.Model):
     take_off_time = models.DateTimeField(null=True)
     price = MoneyField(max_digits=19, decimal_places=4, default_currency="NGN", null=True)
     def __str__(self):
-        return f"{self.agent}: {self.tour}: {self.name}"
+        return f"{self.name}"
 
 class Guide(models.Model):
     name = models.CharField(max_length=50)
