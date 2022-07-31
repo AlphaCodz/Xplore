@@ -6,12 +6,22 @@ from django.contrib.auth.models import User
 from .models import Customer
 
 class UserCreateForm(UserCreationForm):
+
     class Meta:
-        model = Customer
-        fields = ("email", "first_name", "last_name")
+        model = User
+        fields = ('username', 'first_name' , 'last_name', )
+
 
 class UserAdmin(UserAdmin):
     add_form = UserCreateForm
+    prepopulated_fields = {'username': ('email',)}
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('first_name', 'last_name', 'email', 'username', 'password1', 'password2', ),
+        }),
+    )
 
 # Register your models here.
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Tour, Booking, Package, Visa, Passport
+from .models import Tour, Booking, Package, Passport
 
 class TourSerializer(serializers.ModelSerializer):
     class Meta:
