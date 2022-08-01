@@ -12,3 +12,6 @@ https://www.fomfus.com/articles/how-to-use-email-as-username-for-django-authenti
 
 HOW TO ORGANISE ALL DJANGO APPS IN ONE FOLDER
 https://stackoverflow.com/questions/3948356/how-to-keep-all-my-django-applications-in-specific-folder
+
+ADD ID field
+https://www.geeksforgeeks.org/uuidfield-django-models/

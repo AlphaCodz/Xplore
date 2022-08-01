@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from .models import Tour, Package, Agent, Booking, Passport, Visa
+from .models import Tour, Package, Agent, Booking, Passport
 from .serializers import TourSerializer, BookingSerializer
 from .payment import Paystack
 

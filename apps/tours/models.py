@@ -74,23 +74,13 @@ class Booking(models.Model):
     payment_reference = models.CharField(max_length=30, null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
+    approved_by = models.ForeignKey(Customer, on_delete=models.PROTECT, null=True)
     
     def __str__(self):
         return f"{self.customer} {self.status}"
-
-class Visa(models.Model):
-    visa_image = models.ImageField(upload_to="visa/%y/%m/%d/")
-    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name="visa")
-    def __str__(self):
-        return f"/media/{self.image}"
 
 class Passport(models.Model):
     image = models.ImageField(upload_to="passport/%y/%m/%d/")
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name="passports")
     def __str__(self):
         return f"/media/{self.image}"
-    
-    
-
-    
-        

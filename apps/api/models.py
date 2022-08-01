@@ -2,6 +2,8 @@ from enum import unique
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from phonenumber_field.modelfields import PhoneNumberField
+import uuid
+import random
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -50,7 +52,7 @@ class Customer(AbstractUser):
     phone_number = PhoneNumberField(null=True, unique=True)
     verified_email = models.BooleanField(default=False)
     verified_phonenumber = models.BooleanField(default=False, null=True)
-    staff_id_no = models.CharField(max_length=7, unique=True, null=True)
+    staff_id = models.UUIDField(unique=True, default=uuid.uuid4, null=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
