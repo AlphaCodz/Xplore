@@ -1,0 +1,17 @@
+HANDLE IMAGE FIELDS
+https://djangocentral.com/uploading-images-with-django/
+
+HOW TO CUSTOMISE THE IMBUILT USER MODEL
+https://www.codingforentrepreneurs.com/blog/how-to-create-a-custom-django-user-model/
+
+AUTHENTICATION WITH JWT
+https://simpleisbetterthancomplex.com/tutorial/2018/12/19/how-to-use-jwt-authentication-with-django-rest-framework.html
+
+HOW TO CHANGE LOGIN REQUIREMENTS FROM USERNAME TO EMAIL:
+https://www.fomfus.com/articles/how-to-use-email-as-username-for-django-authentication-removing-the-username/
+
+HOW TO ORGANISE ALL DJANGO APPS IN ONE FOLDER
+https://stackoverflow.com/questions/3948356/how-to-keep-all-my-django-applications-in-specific-folder
+
+ADD ID field
+https://www.geeksforgeeks.org/uuidfield-django-models/
