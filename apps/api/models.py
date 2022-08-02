@@ -49,10 +49,10 @@ class Customer(AbstractUser):
     middle_name = models.CharField(max_length=60)
     email = models.EmailField(unique=True)
     username = models.CharField(blank=True, max_length=20)
-    phone_number = PhoneNumberField(null=True, unique=True)
-    verified_email = models.BooleanField(default=False)
-    verified_phonenumber = models.BooleanField(default=False, null=True)
-    staff_id = models.UUIDField(unique=True, default=uuid.uuid4, null=True)
+    # phone_number = PhoneNumberField(null=True, unique=True)
+    # verified_email = models.BooleanField(default=False)
+    # verified_phonenumber = models.BooleanField(default=False, null=True)
+    # staff_id = models.UUIDField(unique=True, default=uuid.uuid4, null=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

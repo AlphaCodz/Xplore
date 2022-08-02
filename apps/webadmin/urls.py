@@ -8,5 +8,7 @@ urlpatterns = [
     path('approved/', views.approved, name="approved"),
     path('decline/', views.declined, name= "declined"),
     path('pending/', views.pending, name="pending" ),
-    path('paid/', views.paid, name= "paid")
+    path('paid/', views.paid, name= "paid"),
+    path('pending_details/', views.pending_details, name="pending_details"),
+    path('login/', views.login, name="login")
 ]
