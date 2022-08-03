@@ -4,6 +4,20 @@ from api.models import Customer
 from djmoney.models.fields import MoneyField
 
 # Create your models here.
+class PendingManager(models.Manager):
+    def get_query(self):
+        return super(PendingManager, self).get_queryset().filter(status="P")
+
+class ApprovedManager(models.Manager):
+    def get_query(self):
+        return super(ApprovedManager, self).get_queryset().filter(status="P")
+    
+class DeclinedManager(models.Manager):
+    def get_query(self):
+        return super(DeclinedManager, self).get_queryset().filter(status="D")
+
+# post = get_object_or_404(Post, id=post_id, status='published')
+
 class Tour(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -75,6 +89,11 @@ class Booking(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     approved_by = models.ForeignKey(Customer, on_delete=models.PROTECT, null=True)
+    
+    objects = models.Manager()
+    pending = PendingManager()
+    approved = ApprovedManager()
+    declined = DeclinedManager()
     
     def __str__(self):
         return f"{self.customer} {self.status}"

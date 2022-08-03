@@ -3,6 +3,8 @@ from django.shortcuts import render
 from api.models import Customer
 from api.serializers import CustomerSerializer
 from rest_framework import generics, permissions
+from django.views.generic import (View, TemplateView, ListView, DetailView, 
+                                  CreateView, UpdateView, DeleteView)
 
 
 # Create your views here.
@@ -20,8 +22,7 @@ class CustomerList(generics.ListAPIView):
         print(start, stop)
         qs = Customer.objects.all()[start:stop]
         return qs
-    
 
-    
+
 
 
