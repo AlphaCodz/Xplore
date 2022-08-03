@@ -108,39 +108,21 @@
                             <th class="md:text-[25px] text-right text-blue-900">View Details</th>
                         </tr>
                     </thead>
-
+                {% for names in paid %}
                     <tbody>
                         <tr class="border-y-[1px]">
                             <td>
                                 <div class="py-6">
-                                    <p class="font-bold">Tosin bakare</p>
+                                    <p class="font-bold">{{names.customer.first_name}} {{names.customer.last_name}}</p>
+                                    <p class="text-[11px]">Paid: {{names.created_at}}</p>
                                 </div>
                             </td>
                             <td class="text-right">
-                                <a href="details.html"><button class="view-details px-8 py-2 text-[18px] bg-blue-800 rounded-md text-white hover:bg-blue-500">view</button></a>
-                            </td>
-                        </tr>
-                        <tr class="border-y-[1px]">
-                            <td>
-                                <div class="py-6">
-                                    <p class="font-bold">moses hunt</p>
-                                </div>
-                            </td>
-                            <td class="text-right">
-                                <a href="details.html"><button class="view-details px-8 py-2 text-[18px] bg-blue-800 rounded-md text-white hover:bg-blue-500">view</button></a>
-                            </td>
-                        </tr>
-                        <tr class="border-y-[1px]">
-                            <td>
-                                <div class="py-6">
-                                    <p class="font-bold">Ahmed Musa</p>
-                                </div>
-                            </td>
-                            <td class="text-right">
-                                <a href="details.html"><button class="view-details px-8 py-2 text-[18px] bg-blue-800 rounded-md text-white hover:bg-blue-500">view</button></a>
+                                <a href="{% url 'webadmin:details' %}"><button class="view-details px-8 py-2 text-[18px] bg-blue-800 rounded-md text-white hover:bg-blue-500">view</button></a>
                             </td>
                         </tr>
                     </tbody>
+                {% endfor %}
                 </table>
             </div>
         </section>
@@ -281,4 +263,4 @@
 
 </body>
 
-</html>
+{% endblock %}

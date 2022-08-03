@@ -47,11 +47,4 @@ class BookingSerializer(serializers.ModelSerializer):
                     image = files.get(i),
                 )
                 passport.save()
-        for i in expected_visa_files:
-            if files.get(i):
-                visa = Visa.objects.create(
-                    image = files.get(i),
-                    booking = booking,
-                )
-                visa.save()
         return booking

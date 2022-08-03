@@ -70,7 +70,7 @@ def paid(request):
     context = {
         "paid": paid,
     }
-    return render(request, 'paid.html', context)
+    return render(request, "paid.html", context)
 
 
 
@@ -86,6 +86,22 @@ def pending(request):
     }
     return render(request, 'pending.html', context)
 
+                    # DETAILS PAGE
+                    
+@api_view(["GET"])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([permissions.IsAdminUser])
+def details(request):
+    # IF USER HAS PAID, GET THE USER ID, AND GET THE USER DEETAILS BY ID
+    paid = Booking.objects.filter(paid=True).prefetch_related("customer")
+    
+    context = {
+        "paid": paid,
+    }
+    
+    return render(request, "details.html", context)
+
+
 
                         # PENDING DETAILS PAGE
 @api_view(["GET"])
@@ -93,11 +109,11 @@ def pending(request):
 @permission_classes([permissions.IsAdminUser])
 def pending_details(request):
     
-    return render(request, "pending_details.html")
+    return render(request, "pending-details.html")
 
 
                         # LOGIN USER
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([permissions.IsAdminUser])
 def login(request):

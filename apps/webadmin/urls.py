@@ -9,6 +9,7 @@ urlpatterns = [
     path('decline/', views.declined, name= "declined"),
     path('pending/', views.pending, name="pending" ),
     path('paid/', views.paid, name= "paid"),
+    path('user_details/', views.details, name="details"),
     path('pending_details/', views.pending_details, name="pending_details"),
     path('login/', views.login, name="login")
 ]

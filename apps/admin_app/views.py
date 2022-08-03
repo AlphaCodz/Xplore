@@ -20,4 +20,3 @@ class CustomerList(generics.ListAPIView):
         print(start, stop)
         qs = Customer.objects.all()[start:stop]
         return qs
-
