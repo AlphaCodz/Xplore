@@ -1,20 +1,19 @@
-from email.policy import default
 from django.db import models
 from api.models import Customer
 from djmoney.models.fields import MoneyField
 
-# Create your models here.
-class PendingManager(models.Manager):
-    def get_query(self):
-        return super(PendingManager, self).get_queryset().filter(status="P")
+# # Create your models here.
+# class PendingManager(models.Manager):
+#     def get_query(self):
+#         return super(PendingManager, self).get_queryset().filter(status="P")
 
-class ApprovedManager(models.Manager):
-    def get_query(self):
-        return super(ApprovedManager, self).get_queryset().filter(status="P")
+# class ApprovedManager(models.Manager):
+#     def get_query(self):
+#         return super(ApprovedManager, self).get_queryset().filter(status="P")
     
-class DeclinedManager(models.Manager):
-    def get_query(self):
-        return super(DeclinedManager, self).get_queryset().filter(status="D")
+# class DeclinedManager(models.Manager):
+#     def get_query(self):
+#         return super(DeclinedManager, self).get_queryset().filter(status="D")
 
 # post = get_object_or_404(Post, id=post_id, status='published')
 
@@ -36,9 +35,15 @@ class Agent(models.Model):
         return self.name
 
 class Package(models.Model):
+    TYPE_CHOICES = (
+        ("R", "Regular"),
+        ("V","VIP"),
+        ("VV","VVIP")
+    )
     agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, null=True)
+    package_type = models.CharField(max_length=3, choices=TYPE_CHOICES, default="R", null=True)
     flight = models.CharField(max_length=20, null=True)
     accomondation = models.CharField(max_length=20, null=True)
     feeding = models.CharField(max_length=20, null=True)
@@ -72,34 +77,35 @@ class Booking(models.Model):
         ("A", "approved"),
         ("D", "declined"),
     )
-    INDIVIDUAL_CHOICES = (
-        (3, 3),
-        (4, 4),
-        (5, 5),
-    )
     
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, related_name="customer")
     agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
     package = models.ForeignKey(Package, on_delete=models.CASCADE)
     category = models.CharField(max_length=5, choices=CATEGORY_CHOICES)
-    individuals = models.IntegerField(choices=INDIVIDUAL_CHOICES, null=True)
+    individuals = models.IntegerField(null=True, default = 1)
     paid = models.BooleanField(default=False)
+    email = models.ForeignKey(Customer, related_name='emails', on_delete=models.CASCADE, null=True)
+    package = models.ForeignKey(Package, related_name='packages', on_delete=models.CASCADE, null=True)
     payment_reference = models.CharField(max_length=30, null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     approved_by = models.ForeignKey(Customer, on_delete=models.PROTECT, null=True)
+    # passport = models.ForeignKey(Passport, on_delete=models.PROTECT, null=True)
     
     objects = models.Manager()
-    pending = PendingManager()
-    approved = ApprovedManager()
-    declined = DeclinedManager()
+    # pending = PendingManager()
+    # approved = ApprovedManager()
+    # declined = DeclinedManager()
     
     def __str__(self):
         return f"{self.customer} {self.status}"
-
+    
+    
 class Passport(models.Model):
     image = models.ImageField(upload_to="passport/%y/%m/%d/")
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name="passports")
     def __str__(self):
         return f"/media/{self.image}"
+    
+
