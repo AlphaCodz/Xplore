@@ -32,6 +32,7 @@ class RegisterSerilizer(serializers.ModelSerializer):
     
     def validate(self, attrs):
         pattern = "[^a-z A-Z 0-9]"
+       
         if attrs["password"] != attrs["password2"]:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
         if attrs["password"].islower():
