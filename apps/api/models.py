@@ -43,16 +43,9 @@ class Customer(AbstractUser):
     email = models.EmailField(unique=True)
     username = models.CharField(blank=True, max_length=20)
     phone_number = PhoneNumberField(null=True, unique=True)
-<<<<<<< HEAD
     verified_email = models.BooleanField(default=False)
     verified_phonenumber = models.BooleanField(default=False, null=True)
     staff_id = models.UUIDField(unique=True, default=uuid.uuid4, null=True)
-=======
-    # verified_email = models.BooleanField(default=False)
-    # verified_phonenumber = models.BooleanField(default=False, null=True)
-    # staff_id = models.UUIDField(unique=True, default=uuid.uuid4, null=True)
->>>>>>> 44d249c51f150420da9a88d1e990f8f47000e768
-
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
@@ -60,4 +53,3 @@ class Customer(AbstractUser):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-
