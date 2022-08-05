@@ -1,11 +1,12 @@
 from urllib import response
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
+from requests import request
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from .models import Tour, Package, Agent, Booking, Passport
-from .serializers import TourSerializer, BookingSerializer
+from .models import Tour, Package, Booking
+from .serializers import TourSerializer, BookingSerializer, PackageSerializer
 from .payment import Paystack
 
 class DetailBookingPermission(permissions.BasePermission):
@@ -51,7 +52,7 @@ def tourPackageList(request, id):
             "take_off_date": package.take_off_date,
             "return_date": package.return_date,
             "take_off_time": package.take_off_time,
-            "price": package.price,
+            "price": str(package.price),
             "agent": package.agent.name,
             "agent_logo": str(package.agent.logo),
             "description": package.description,
@@ -60,6 +61,13 @@ def tourPackageList(request, id):
 
     data = {"packages": package_list}
     return JsonResponse(data)
+
+"""class TourPackageList(generics.ListAPIView):
+    serializer_class = PackageSerializer
+    def get_queryset(self):
+        tour = get_object_or_404(Tour, pk=self.kwargs.get("id"))
+        packages = Package.objects.filter(tour = tour)
+        return packages"""
 
 class BookingList(generics.ListAPIView):
     serializer_class = BookingSerializer
@@ -74,74 +82,22 @@ class BookingDetail(generics.RetrieveAPIView):
     permission_classes = (DetailBookingPermission, permissions.IsAuthenticated)
 
     def get_queryset(self):
-        qs = Booking.objects.get(id= self.kwargs["pk"])
+        qs = get_object_or_404(Booking, pk= self.kwargs.get("pk"))
         return qs
     
     def get_object(self):
         qs = self.get_queryset()
         return qs
 
-@api_view(["post"])
-@permission_classes([MustBeCustomerBooking])
-def pay(request, pk):
-    data = {}
-    return Response(data)
-
-class PayForBooking(generics.UpdateAPIView):
+class SubmitPayment(generics.UpdateAPIView):
     serializer_class = BookingSerializer
-    permission_classes = (DetailBookingPermission,)
-    def get_object(self):
-        pk = self.kwargs["pk"]
-        return get_object_or_404(Booking, pk=pk)
+    def get_queryset(self):
+        qs = get_object_or_404(Booking, pk= self.kwargs.get("pk"))
+        print(qs)
+        return qs
     
     def put(self, request, *args, **kwargs):
-        P = Paystack()
-        user = request.user
-        booking = self.get_object()
-        if not booking.payment_reference:
-            amount = booking.package.price * 100
-            email = user.email
-            try:
-                payment = P.initialize_payment(amount, email)
-            except:
-                return Response({
-                    "detail": "Some error occured"
-                },502)
-            authorization_url = payment["data"]["authorization_url"]
-            reference = payment["data"]["reference"]
-            data = {
-                "authorization_url": authorization_url,
-                "reference": reference,
-            }
-            booking.payment_reference = reference
-            booking.save()
-            return Response(data)
-        else:
-            data = P.verify_transaction(booking.payment_reference)
-            if data["data"]["status"] == "success":
-                booking.paid = True
-                booking.save()
-                return Response({
-                    "details":"Paid",
-                })
-            
-            else:
-                booking.payment_reference = None
-                booking.save()
-                amount = booking.package.price * 100
-                email = user.email
-                try:
-                    payment = P.initialize_payment(amount, email)
-                except:
-                    return Response({
-                        "detail": "Some error occured"
-                    },502)
-                authorization_url = payment["data"]["authorization_url"]
-                reference = payment["data"]["reference"]
-                data = {
-                    "authorization_url": authorization_url,
-                    "reference": reference,
-                }
-                booking.payment_reference = reference
-                booking.save()
-                return Response(data)
+        obj = self.get_queryset()
+        data = BookingSerializer(obj)
+        print(data)
+        return Response(data.data)

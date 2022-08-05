@@ -22,12 +22,6 @@ class RegisterSerilizer(serializers.ModelSerializer):
     )
     password = serializers.CharField(write_only=True, required=True, validators =[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
-    
-    # staff_id_no = serializers.CharField(
-    #     required = False,
-    #     validators = [UniqueValidator(queryset= Customer.objects.all())]
-    # )
-
     class Meta:
         model = Customer
         fields = ("id", 'password', 'password2', 'email', 'first_name', 'last_name', 'phone_number')
@@ -53,8 +47,8 @@ class RegisterSerilizer(serializers.ModelSerializer):
             username= validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
+            phone_number=validated_data['phone_number'],
         )  
         customer.set_password(raw_password = validated_data['password'])
         customer.save()
-        return customer
-    
+        return customer 

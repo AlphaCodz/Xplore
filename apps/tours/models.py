@@ -1,4 +1,3 @@
-from email.policy import default
 from django.db import models
 from django.forms import DateField
 from api.models import Customer
