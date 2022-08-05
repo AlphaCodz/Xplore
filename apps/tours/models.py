@@ -1,7 +1,9 @@
 from email.policy import default
 from django.db import models
+from django.forms import DateField
 from api.models import Customer
 from djmoney.models.fields import MoneyField
+from birthday import BirthdayField, BirthdayManager
 
 # # Create your models here.
 # class PendingManager(models.Manager):
@@ -66,6 +68,21 @@ class Guide(models.Model):
     def __str__(self):
         return f"Company: {self.agent} ____ Guide: {self.name}"
 
+class AdminReg(models.Model):
+    first_name = models.CharField(max_length=250)
+    last_name = models.CharField(max_length=250)
+    email = models.EmailField(unique=True)
+    staff_no = models.CharField(max_length=6, unique=True)
+    birthday = BirthdayField(null=True)
+    home_address = models.CharField(max_length=200)
+    password = models.CharField(max_length=200)
+    password2 = models.CharField(max_length=200)
+    
+    objects = BirthdayManager()
+    
+    def __str__(self):
+        return f"{self.last_name} {self.staff_no}"
+
 class Booking(models.Model):
     CATEGORY_CHOICES = (
         ("S", "single"),
@@ -91,7 +108,7 @@ class Booking(models.Model):
     payment_reference = models.CharField(max_length=30, null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
-    approved_by = models.ForeignKey(Customer, on_delete=models.PROTECT, null=True)
+    approved_by = models.ForeignKey(AdminReg, on_delete=models.PROTECT, null=True)
     # passport = models.ForeignKey(Passport, on_delete=models.PROTECT, null=True)
     
     objects = models.Manager()
@@ -110,3 +127,6 @@ class Passport(models.Model):
         return f"/media/{self.image}"
     
 
+
+    
+ 

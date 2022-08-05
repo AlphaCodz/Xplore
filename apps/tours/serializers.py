@@ -1,5 +1,9 @@
 from rest_framework import serializers
-from .models import Tour, Booking, Package, Passport
+from django.contrib.auth.password_validation import validate_password
+from .models import AdminReg, Tour, Booking, Package, Passport
+import re
+from django.contrib.auth.hashers import make_password
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenObtainSerializer
 
 class TourSerializer(serializers.ModelSerializer):
     class Meta:
@@ -62,4 +66,3 @@ class UserDetailSerializer(serializers.ModelSerializer):
         model = Booking
         fields = ("customer_id", "customer", "category", "no_of_persons_on_tour","payment_reference", "package", "email", "package_type")
         
-    

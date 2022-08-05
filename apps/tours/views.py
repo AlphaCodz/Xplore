@@ -37,6 +37,7 @@ def tourPackageList(request, id):
     tour = Tour.objects.get(id=id)
     packages = Package.objects.filter(tour=tour)
     package_list = []
+    
     for package in packages:
         package_json = {
             "id": package.id,
