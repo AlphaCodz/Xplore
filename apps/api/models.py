@@ -3,7 +3,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from phonenumber_field.modelfields import PhoneNumberField
 import uuid
-import random
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -36,7 +35,6 @@ class Customer(AbstractUser):
         ('F', 'Female'),
         ('O', 'Other'),
         )
-
     gender = models.CharField(max_length= 10, choices=GENDER_CHOICES)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
     middle_name = models.CharField(max_length=60)
@@ -45,7 +43,7 @@ class Customer(AbstractUser):
     phone_number = PhoneNumberField(null=True, unique=True)
     verified_email = models.BooleanField(default=False)
     verified_phonenumber = models.BooleanField(default=False, null=True)
-    staff_id = models.UUIDField(unique=True, default=uuid.uuid4, null=True)
+    staff_id = models.UUIDField(unique=True, null=True)
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
