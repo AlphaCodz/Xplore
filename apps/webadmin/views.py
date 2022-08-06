@@ -17,11 +17,14 @@ def index(request):
     declined = Booking.objects.filter(status="D").count()
     paid = Booking.objects.filter(paid = True).count()
     query = Booking.objects.filter(status="P").prefetch_related("customer")
-
+    approved_names = Booking.objects.filter(status="A").prefetch_related("customer")
+    declined_names = Booking.objects.filter(status="D").prefetch_related("customer")
     context = {
         "pending": pending,
         "approved": approved,
         "declined": declined,
+        "approved_names":approved_names,
+        "declined_names":declined_names,
         "paid": paid,
         "query":query,
     }
@@ -48,9 +51,11 @@ def approved(request):
 
 def declined(request):
     declined = Booking.objects.filter(status="D").prefetch_related("customer")
+    declined_count = Booking.objects.filter(status="D").count()
     
     context = {
         "declined": declined,
+        "declined_count":declined_count
     }
     return render(request, 'declined.html', context)
 
@@ -65,7 +70,7 @@ def paid(request):
     context = {
         "paid": paid,
     }
-    return render(request, 'paid.html', context)
+    return render(request, "paid.html", context)
 
 
 
@@ -80,3 +85,37 @@ def pending(request):
         "pending": pending,
     }
     return render(request, 'pending.html', context)
+
+                    # DETAILS PAGE
+                    
+@api_view(["GET"])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([permissions.IsAdminUser])
+def details(request):
+    # IF USER HAS PAID, GET THE USER ID, AND GET THE USER DEETAILS BY ID
+    paid = Booking.objects.filter(paid=True).prefetch_related("customer")
+    
+    context = {
+        "paid": paid,
+    }
+    
+    return render(request, "details.html", context)
+
+
+
+                        # PENDING DETAILS PAGE
+@api_view(["GET"])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([permissions.IsAdminUser])
+def pending_details(request):
+    
+    return render(request, "pending-details.html")
+
+
+                        # LOGIN USER
+@api_view(["GET", "POST"])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([permissions.IsAdminUser])
+def login(request):
+    
+    return render(request, "login.html")

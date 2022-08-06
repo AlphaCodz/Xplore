@@ -3,3 +3,5 @@ media/
 .env
 __pycache__/
 *.pyc
+node_modules/
+migrations/
