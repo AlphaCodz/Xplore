@@ -9,7 +9,7 @@ import re
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ("id", "first_name", "last_name", "middle_name", "email", "gender", "status", "phone_number",)
+        fields = ("id", "first_name", "last_name", "middle_name", "email", "gender", "status", "phone_number")
 
 class RegisterSerilizer(serializers.ModelSerializer):
     email = serializers.EmailField(
@@ -24,7 +24,7 @@ class RegisterSerilizer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True, required=True)
     class Meta:
         model = Customer
-        fields = ("id", 'password', 'password2', 'email', 'first_name', 'last_name', 'phone_number')
+        fields = ("id", 'password', 'password2', 'email', 'first_name', 'last_name')
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True},

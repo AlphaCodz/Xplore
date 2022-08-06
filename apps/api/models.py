@@ -44,6 +44,7 @@ class Customer(AbstractUser):
     verified_email = models.BooleanField(default=False)
     verified_phonenumber = models.BooleanField(default=False, null=True)
     staff_id = models.UUIDField(unique=True, null=True)
+    
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
