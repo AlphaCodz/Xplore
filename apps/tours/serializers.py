@@ -28,7 +28,7 @@ class BookingSerializer(serializers.ModelSerializer):
             "status", 
             "paid", 
             "passports",
-            "payment")
+            )
         extra_kwargs = {
             'tour': {'required': False},
             'agent': {'required': False},
