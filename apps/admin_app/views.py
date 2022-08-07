@@ -51,12 +51,12 @@ def detail_counts(request):
     return JsonResponse(query)
 
 @api_view(["GET"])
-@permission_classes([permissions.IsAdminUser])
+@permission_classes([permissions.IsAuthenticated])
 def UserDetailsList(request, id):
-   user = Customer.objects.get(id=id)
-   details = Booking.objects.filter(customer=user)
-   detail_list = []
-   for details in details:
+    user = Customer.objects.get(id=id)
+    details = Booking.objects.filter(customer=user)
+    detail_list = []
+    for details in details:
         query = {
         "user_id":details.customer.id,
         "Booking_id":details.id,
@@ -66,21 +66,22 @@ def UserDetailsList(request, id):
         "email":details.customer.email,
         "package_type":details.package.package_type,
         "package_price": str(details.package.price),
-        "number_of_person": details.individuals
+        "number_of_person": details.individuals,
+        "location": details.tour.location
         }
         detail_list.append(query)
-   context_data = {"detail_list":detail_list}
+    context_data = {"detail_list":detail_list}
             
-   return JsonResponse(context_data)
+    return JsonResponse(context_data)
 
 
 class RegAdmin(generics.CreateAPIView):
     queryset = AdminReg.objects.all()
-    permission_classes = (permissions.IsAdminUser,)
+    #permission_classes = (permissions.IsAdminUser,)
     serializer_class = AdminSerializer
     
 class AdminDetails(APIView):
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (permissions.IsAuthenticated,)
     def get(self, request, format=None):
         user= request.user
         if request.user:
@@ -88,9 +89,30 @@ class AdminDetails(APIView):
             return response(serializer.data)
         
 class MyTokenObtainPairView(TokenObtainPairView):
-    permission_classes = (permissions.IsAdminUser,)
     serializer_class = MyTokenObtainPairSerializer
     
     
-
+    #  AdminView
+# @api_view(["GET"])
+# @permission_classes([permissions.IsAdminUser])
+# def AdminDetailsList(request, id):
+#     user = AdminReg.objects.get(id=id)
+#     details = AdminReg.objects.filter(customer=user)
+#     detail_list = []
+#     for details in details:
+#         query = {
+#         "user_id":details.customer.id,
+#         "Booking_id":details.id,
+#         "category": details.category,
+#         "first_name":details.customer.first_name,
+#         "last_name":details.customer.last_name,
+#         "email":details.customer.email,
+#         "package_type":details.package.package_type,
+#         "package_price": str(details.package.price),
+#         "number_of_person": details.individuals
+#         }
+#         detail_list.append(query)
+#     context_data = {"detail_list":detail_list}
+            
+#     return JsonResponse(context_data)
 

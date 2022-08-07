@@ -1,23 +1,8 @@
 from django.db import models
 from django.forms import DateField
 from api.models import Customer
-from djmoney.models.fields import MoneyField
 from admin_app.models import AdminReg
-
-# # Create your models here.
-# class PendingManager(models.Manager):
-#     def get_query(self):
-#         return super(PendingManager, self).get_queryset().filter(status="P")
-
-# class ApprovedManager(models.Manager):
-#     def get_query(self):
-#         return super(ApprovedManager, self).get_queryset().filter(status="P")
-    
-# class DeclinedManager(models.Manager):
-#     def get_query(self):
-#         return super(DeclinedManager, self).get_queryset().filter(status="D")
-
-# post = get_object_or_404(Post, id=post_id, status='published')
+from djmoney.models.fields import MoneyField
 
 class Tour(models.Model):
     name = models.CharField(max_length=100)
@@ -67,7 +52,6 @@ class Guide(models.Model):
     def __str__(self):
         return f"Company: {self.agent} ____ Guide: {self.name}"
 
-
 class Booking(models.Model):
     CATEGORY_CHOICES = (
         ("S", "single"),
@@ -94,6 +78,7 @@ class Booking(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     approved_by = models.ForeignKey(AdminReg, on_delete=models.PROTECT, null=True)
+
     # passport = models.ForeignKey(Passport, on_delete=models.PROTECT, null=True)
     
     objects = models.Manager()
@@ -110,8 +95,3 @@ class Passport(models.Model):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name="passports")
     def __str__(self):
         return f"/media/{self.image}"
-    
-
-
-    
- 

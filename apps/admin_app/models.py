@@ -12,7 +12,7 @@ class AdminReg(models.Model):
     first_name = models.CharField(max_length=250, null=True)
     last_name = models.CharField(max_length=250, null=True)
 
-    staff_number = models.CharField(max_length=6, unique=True)
+    staff_number = models.CharField(max_length=6, unique=True, null=True)
     birthday = BirthdayField(null=True)
     home_address = models.CharField(max_length=200, null=True)
 
