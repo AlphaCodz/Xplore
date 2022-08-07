@@ -1,8 +1,8 @@
 import requests
-import environ
+#import environ
 
-env = environ.Env()
-environ.Env.read_env()
+#env = environ.Env()
+#environ.Env.read_env()
 
 class Paystack:
     def __init__(self):
@@ -27,3 +27,4 @@ class Paystack:
         
 
 p = Paystack()
+print(p.initialize_payment(10000, "bbruks07@gmail.com"))
