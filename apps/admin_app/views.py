@@ -14,6 +14,7 @@ from .serializers import MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from tours.serializers import BookingSerializer
 from django.views.generic import ListView, DetailView
+from rest_framework.response import Response
 
 
 # Create your views here.
@@ -34,7 +35,7 @@ class CustomerList(generics.ListAPIView):
     
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([permissions.IsAdminUser])
+# @permission_classes([permissions.IsAdminUser])
 def detail_counts(request):
     pending = Booking.objects.filter(status="P").count()
     approved = Booking.objects.filter(status="A").count()
@@ -52,6 +53,7 @@ def detail_counts(request):
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
+@permission_classes([permissions.IsAdminUser])
 def UserDetailsList(request, id):
     user = Customer.objects.get(id=id)
     details = Booking.objects.filter(customer=user)
@@ -79,40 +81,15 @@ class RegAdmin(generics.CreateAPIView):
     queryset = AdminReg.objects.all()
     #permission_classes = (permissions.IsAdminUser,)
     serializer_class = AdminSerializer
-    
-class AdminDetails(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-    def get(self, request, format=None):
-        user= request.user
-        if request.user:
-            serializer = AdminSerializer(user)
-            return response(serializer.data)
         
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
     
     
-    #  AdminView
-# @api_view(["GET"])
-# @permission_classes([permissions.IsAdminUser])
-# def AdminDetailsList(request, id):
-#     user = AdminReg.objects.get(id=id)
-#     details = AdminReg.objects.filter(customer=user)
-#     detail_list = []
-#     for details in details:
-#         query = {
-#         "user_id":details.customer.id,
-#         "Booking_id":details.id,
-#         "category": details.category,
-#         "first_name":details.customer.first_name,
-#         "last_name":details.customer.last_name,
-#         "email":details.customer.email,
-#         "package_type":details.package.package_type,
-#         "package_price": str(details.package.price),
-#         "number_of_person": details.individuals
-#         }
-#         detail_list.append(query)
-#     context_data = {"detail_list":detail_list}
-            
-#     return JsonResponse(context_data)
-
+class AdminDetail(APIView):
+    permission_classes= (permissions.IsAdminUser,)
+    def get(self, request, format=None):
+        user = request.user
+        if request.user:
+            serializer = AdminSerializer(user)
+            return Response(serializer.data)
