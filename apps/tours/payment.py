@@ -26,5 +26,5 @@ class Paystack:
 
         
 
-p = Paystack()
-print(p.initialize_payment(10000, "bbruks07@gmail.com"))
+# p = Paystack()
+# print(p.initialize_payment(10000, "bbruks07@gmail.com"))
