@@ -8,7 +8,5 @@ urlpatterns = [
     path('customer/info/<int:id>',views.UserDetailsList, name='customer_info'),
     path('admin/reg', RegAdmin.as_view(), name='adminreg'),
     path('admin/login', MyTokenObtainPairView.as_view(), name='adminlogin'),
-    path('admin/details', AdminDetails.as_view(), name='admindetails')
+    path('admin/details', AdminDetail.as_view(), name='admindetails')
 ]
-
-# ALL URLS WORKING FINE
