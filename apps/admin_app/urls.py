@@ -10,3 +10,5 @@ urlpatterns = [
     path('admin/login', MyTokenObtainPairView.as_view(), name='adminlogin'),
     path('admin/details', AdminDetails.as_view(), name='admindetails')
 ]
+
+# ALL URLS WORKING FINE
