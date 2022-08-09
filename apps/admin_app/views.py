@@ -1,5 +1,3 @@
-from math import perm
-from urllib import response
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -53,7 +51,6 @@ def detail_counts(request):
     return JsonResponse(query)
 
 @api_view(["GET"])
-@permission_classes([permissions.IsAuthenticated])
 @permission_classes([permissions.IsAdminUser])
 def UserDetailsList(request, id):
     user = Customer.objects.get(id=id)
@@ -78,15 +75,20 @@ def UserDetailsList(request, id):
     return JsonResponse(context_data)
 
 
+@api_view(["GET"])
+@permission_classes([permissions.IsAdminUser])
 class RegAdmin(generics.CreateAPIView):
     queryset = AdminReg.objects.all()
     #permission_classes = (permissions.IsAdminUser,)
     serializer_class = AdminSerializer
         
+@api_view(["GET"])
+@permission_classes([permissions.IsAdminUser])
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
     
-    
+@api_view(["GET"])
+@permission_classes([permissions.IsAdminUser])
 class AdminDetail(APIView):
     permission_classes= (permissions.IsAdminUser,)
     def get(self, request, format=None):
@@ -96,6 +98,8 @@ class AdminDetail(APIView):
             return Response(serializer.data)
         
 
+@api_view(["GET"])
+@permission_classes([permissions.IsAdminUser])
 def PendingCustomers(request):
     queryset = Booking.objects.filter(status="P")
     pending_users = []
@@ -112,6 +116,8 @@ def PendingCustomers(request):
             
     return JsonResponse(context_data)
 
+@api_view(["GET"])
+@permission_classes([permissions.IsAdminUser])
 def ApprovedCustomers(request):
     queryset = Booking.objects.filter(status="A")
     approved_users = []
@@ -129,6 +135,8 @@ def ApprovedCustomers(request):
     }
     return JsonResponse(context)
         
+@api_view(["GET"])
+@permission_classes([permissions.IsAdminUser])
 def DeclinedCustomers(request):
     queryset = Booking.objects.filter(status="D")
     declined_users = []
@@ -146,6 +154,8 @@ def DeclinedCustomers(request):
     }
     return JsonResponse(context)
 
+@api_view(["GET"])
+@permission_classes([permissions.IsAdminUser])
 def PaidCustomers(request):
     queryset = Booking.objects.filter(paid=True)
     paid_users = []
