@@ -53,6 +53,13 @@ class Guide(models.Model):
         return f"Company: {self.agent} ____ Guide: {self.name}"
 
 class Booking(models.Model):
+    # REASON_CHOICES = (
+    #     ('IMAGE_NOT_CLEAR', "SUBMITTED IMAGES ARE NOT CLEAR ENOUGH"),
+    #     ('FAKE_DOCUMENT', "DOCUMENTS ARE SUSPECTED TO BE FAKE"),
+    #     ('USER_DETAILS_CONFLICT', "SOME DETAILS ARE NOT CORRECT OR CORRESPONDING")
+        
+    # )
+    
     CATEGORY_CHOICES = (
         ("S", "single"),
         ("C", "couple"),
@@ -78,6 +85,8 @@ class Booking(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     approved_by = models.ForeignKey(AdminReg, on_delete=models.PROTECT, null=True)
+    # reason = models.CharField(max_length=50, choices= REASON_CHOICES, null=True)
+    # other_reasons = models.TextField(max_length=300, null=True )
 
     # passport = models.ForeignKey(Passport, on_delete=models.PROTECT, null=True)
     

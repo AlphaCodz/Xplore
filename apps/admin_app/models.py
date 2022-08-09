@@ -1,4 +1,3 @@
-import email
 from django.db import models
 from birthday import BirthdayField, BirthdayManager
 from api.models import Customer
@@ -16,6 +15,8 @@ class AdminReg(models.Model):
     staff_number = models.CharField(max_length=6, unique=True, null=True)
     birthday = BirthdayField(null=True)
     home_address = models.CharField(max_length=200, null=True)
+    
+
 
     objects = BirthdayManager()
     

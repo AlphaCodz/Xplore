@@ -9,8 +9,8 @@ urlpatterns = [
     path('admin/reg', RegAdmin.as_view(), name='adminreg'),
     path('admin/login', MyTokenObtainPairView.as_view(), name='adminlogin'),
     path('admin/details', AdminDetail.as_view(), name='admindetails'),
-    path('pending',views.PendingCustomers, name="pending"),
-    path('approved', views.ApprovedCustomers, name="approved"),
-    path('declined', views.DeclinedCustomers, name="declined"),
-    path('paid', views.PaidCustomers, name="paid")
+    path('pending',views.PendingBookings, name="pending"),
+    path('approved', views.ApprovedBookings, name="approved"),
+    path('declined', views.DeclinedBookings, name="declined"),
+    path('paid', views.PaidBookings, name="paid")
 ]
