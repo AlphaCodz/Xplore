@@ -1,20 +1,17 @@
-from urllib import response
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.http import JsonResponse
 from django.http import JsonResponse
 from api.models import Customer
 from api.serializers import CustomerSerializer
 from rest_framework import generics, permissions
 from rest_framework.decorators import permission_classes, api_view, authentication_classes
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from tours.models import *
+from tours.models import Customer, Booking, Package
 from .serializers import AdminSerializer
 from rest_framework.views import APIView
 from .serializers import MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from tours.serializers import BookingSerializer
-from django.views.generic import ListView, DetailView
 from rest_framework.response import Response
+from .models import AdminReg
 
 
 # Create your views here.
@@ -35,7 +32,6 @@ class CustomerList(generics.ListAPIView):
     
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-# @permission_classes([permissions.IsAdminUser])
 def detail_counts(request):
     pending = Booking.objects.filter(status="P").count()
     approved = Booking.objects.filter(status="A").count()

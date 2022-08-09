@@ -1,4 +1,3 @@
-import email
 from django.db import models
 from birthday import BirthdayField, BirthdayManager
 from api.models import Customer

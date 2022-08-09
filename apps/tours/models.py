@@ -1,7 +1,6 @@
 from django.db import models
-from django.forms import DateField
 from api.models import Customer
-from admin_app.models import AdminReg
+from admin_app.models import Admin
 from djmoney.models.fields import MoneyField
 
 class Tour(models.Model):
@@ -77,9 +76,8 @@ class Booking(models.Model):
     payment_reference = models.CharField(max_length=30, null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
-    approved_by = models.ForeignKey(AdminReg, on_delete=models.PROTECT, null=True)
+    approved_by = models.ForeignKey(Admin, on_delete=models.PROTECT, null=True)
 
-    # passport = models.ForeignKey(Passport, on_delete=models.PROTECT, null=True)
     
     objects = models.Manager()
     # pending = PendingManager()
@@ -95,3 +93,8 @@ class Passport(models.Model):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name="passports")
     def __str__(self):
         return f"/media/{self.image}"
+    
+
+
+    
+ 
