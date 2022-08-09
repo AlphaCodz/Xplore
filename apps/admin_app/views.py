@@ -133,7 +133,7 @@ def ApprovedBookings(request):
     return JsonResponse(context)
 
 @api_view(["GET"])   
-@permission_classes([permissions.IsAdminUser])     
+# @permission_classes([permissions.IsAdminUser])     
 def DeclinedBookings(request):
     queryset = Booking.objects.filter(status="D")
     declined_bookings = []
@@ -143,7 +143,9 @@ def DeclinedBookings(request):
           "customer_id":declined.customer.id,
           "first_name":declined.customer.first_name,
           "last_name":declined.customer.last_name,
-          "declined_since": declined.created_at  
+          "declined_since": declined.created_at,  
+          "reason_for_decline": declined.reason,
+          "other_reasons": declined.other_reasons
         }
         declined_bookings.append(query)
     context = {
