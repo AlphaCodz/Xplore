@@ -2,12 +2,12 @@ from django.db import models
 from birthday import BirthdayField, BirthdayManager
 from api.models import Customer
 
-# Create your models here.
-class AdminReg(models.Model):
-    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, null=True)
 
+# Create your models here.
+class Admin(models.Model):
+    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, null=True)
+    
     #proxy fields
-    # profile_image = models.ImageField(upload_to ="adminProfile_images/", null=True)
     email = models.EmailField(unique=True, null=True)
     first_name = models.CharField(max_length=250, null=True)
     last_name = models.CharField(max_length=250, null=True)

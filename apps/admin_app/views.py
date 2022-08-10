@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from .serializers import MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
-from .models import AdminReg
+from .models import Admin
 
 
 # Create your views here.
@@ -73,7 +73,7 @@ def UserDetailsList(request, id):
 
 
 class RegAdmin(generics.CreateAPIView):
-    queryset = AdminReg.objects.all()
+    queryset = Admin.objects.all()
     #permission_classes = (permissions.IsAdminUser,)
     serializer_class = AdminSerializer
         
@@ -89,10 +89,11 @@ class AdminDetail(APIView):
             serializer = AdminSerializer(user)
             return Response(serializer.data)
         
-
-def PendingCustomers(request):
+@api_view(["GET"])
+@permission_classes([permissions.IsAdminUser])
+def PendingBookings(request):
     queryset = Booking.objects.filter(status="P")
-    pending_users = []
+    pending_bookings = []
     
     for pending in queryset:
         query = {
@@ -101,14 +102,16 @@ def PendingCustomers(request):
         "last_name": pending.customer.last_name,
         "pending_since": pending.created_at
         }
-        pending_users.append(query)
-    context_data = {"pending_users":pending_users}
+        pending_bookings.append(query)
+    context_data = {"pending_users":pending_bookings}
             
     return JsonResponse(context_data)
 
-def ApprovedCustomers(request):
+@api_view(["GET"])
+@permission_classes([permissions.IsAdminUser])
+def ApprovedBookings(request):
     queryset = Booking.objects.filter(status="A")
-    approved_users = []
+    approved_bookings = []
     
     for approved in queryset:
         query = {
@@ -117,30 +120,36 @@ def ApprovedCustomers(request):
             "last_name": approved.customer.last_name,
             "approved_since": approved.created_at
         }
-        approved_users.append(query)
+        approved_bookings.append(query)
     context = {
-        "approved_users":approved_users
+        "approved_users":approved_bookings
     }
     return JsonResponse(context)
-        
-def DeclinedCustomers(request):
+
+@api_view(["GET"])   
+@permission_classes([permissions.IsAdminUser])     
+def DeclinedBookings(request):
     queryset = Booking.objects.filter(status="D")
-    declined_users = []
+    declined_bookings = []
     
     for declined in queryset:
         query = {
           "customer_id":declined.customer.id,
           "first_name":declined.customer.first_name,
           "last_name":declined.customer.last_name,
-          "declined_since": declined.created_at  
+          "declined_since": declined.created_at,  
+          "reason_for_decline": declined.reason,
+          "other_reasons": declined.other_reasons
         }
-        declined_users.append(query)
+        declined_bookings.append(query)
     context = {
-        "declined":declined_users
+        "declined":declined_bookings
     }
     return JsonResponse(context)
 
-def PaidCustomers(request):
+@api_view(["GET"])
+@permission_classes([permissions.IsAdminUser])
+def PaidBookings(request):
     queryset = Booking.objects.filter(paid=True)
     paid_bookings = []
     
@@ -149,11 +158,21 @@ def PaidCustomers(request):
             "booking_id":bookings.id,
             "customer": bookings.customer,
         }
-        paid_users.append(query)
+        paid_bookings.append(query)
     data =  {
-        "paid": paid_users
+        "paid": paid_bookings
     }
     return JsonResponse(data)
-    
-def Bookingslip(request):
-    pass
+
+@api_view(["GET"])
+def all_bookings(request, status):
+    qs = Booking.objects.filter(status = status)
+    bookings = []
+    for booking in qs:
+        json_form = {
+            "booking_id": booking.id,
+            "customer": str(booking.customer),
+        }
+        bookings.append(json_form)
+    data = {status:bookings}
+    return JsonResponse(data)
