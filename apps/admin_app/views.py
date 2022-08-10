@@ -1,7 +1,4 @@
-from math import perm
-from urllib import response
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
 from django.http import JsonResponse
 from api.models import Customer
 from api.serializers import CustomerSerializer
@@ -13,8 +10,6 @@ from .serializers import AdminSerializer
 from rest_framework.views import APIView
 from .serializers import MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from tours.serializers import BookingSerializer
-from django.views.generic import ListView, DetailView
 from rest_framework.response import Response
 
 
@@ -133,7 +128,7 @@ def ApprovedBookings(request):
     return JsonResponse(context)
 
 @api_view(["GET"])   
-# @permission_classes([permissions.IsAdminUser])     
+@permission_classes([permissions.IsAdminUser])     
 def DeclinedBookings(request):
     queryset = Booking.objects.filter(status="D")
     declined_bookings = []

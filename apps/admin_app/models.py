@@ -8,7 +8,6 @@ class AdminReg(models.Model):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE, null=True)
     
     #proxy fields
-    # profile_image = models.ImageField(upload_to ="adminProfile_images/", null=True)
     email = models.EmailField(unique=True, null=True)
     first_name = models.CharField(max_length=250, null=True)
     last_name = models.CharField(max_length=250, null=True)
@@ -16,8 +15,6 @@ class AdminReg(models.Model):
     staff_number = models.CharField(max_length=6, unique=True, null=True)
     birthday = BirthdayField(null=True)
     home_address = models.CharField(max_length=200, null=True)
-    
-
 
     objects = BirthdayManager()
     
