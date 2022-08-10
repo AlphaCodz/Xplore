@@ -24,7 +24,3 @@ class Paystack:
         response = requests.get(url, headers=self.headers)
         return response.json()
 
-        
-
-p = Paystack()
-#print(p.initialize_payment(10000, "bbruks07@gmail.com"))

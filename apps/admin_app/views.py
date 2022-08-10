@@ -1,11 +1,10 @@
 from django.http import JsonResponse
-from django.http import JsonResponse
 from api.models import Customer
 from api.serializers import CustomerSerializer
 from rest_framework import generics, permissions
 from rest_framework.decorators import permission_classes, api_view, authentication_classes
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from tours.models import Customer, Booking, Package
+from tours.models import Customer, Booking
 from .serializers import AdminSerializer
 from rest_framework.views import APIView
 from .serializers import MyTokenObtainPairSerializer
@@ -89,3 +88,72 @@ class AdminDetail(APIView):
         if request.user:
             serializer = AdminSerializer(user)
             return Response(serializer.data)
+        
+
+def PendingCustomers(request):
+    queryset = Booking.objects.filter(status="P")
+    pending_users = []
+    
+    for pending in queryset:
+        query = {
+        "customer_id": pending.customer.id,
+        "first_name": pending.customer.first_name,
+        "last_name": pending.customer.last_name,
+        "pending_since": pending.created_at
+        }
+        pending_users.append(query)
+    context_data = {"pending_users":pending_users}
+            
+    return JsonResponse(context_data)
+
+def ApprovedCustomers(request):
+    queryset = Booking.objects.filter(status="A")
+    approved_users = []
+    
+    for approved in queryset:
+        query = {
+            "customer_id":approved.customer.id,
+            "first_name": approved.customer.first_name,
+            "last_name": approved.customer.last_name,
+            "approved_since": approved.created_at
+        }
+        approved_users.append(query)
+    context = {
+        "approved_users":approved_users
+    }
+    return JsonResponse(context)
+        
+def DeclinedCustomers(request):
+    queryset = Booking.objects.filter(status="D")
+    declined_users = []
+    
+    for declined in queryset:
+        query = {
+          "customer_id":declined.customer.id,
+          "first_name":declined.customer.first_name,
+          "last_name":declined.customer.last_name,
+          "declined_since": declined.created_at  
+        }
+        declined_users.append(query)
+    context = {
+        "declined":declined_users
+    }
+    return JsonResponse(context)
+
+def PaidCustomers(request):
+    queryset = Booking.objects.filter(paid=True)
+    paid_bookings = []
+    
+    for bookings in paid_bookings:
+        query = {
+            "booking_id":bookings.id,
+            "customer": bookings.customer,
+        }
+        paid_users.append(query)
+    data =  {
+        "paid": paid_users
+    }
+    return JsonResponse(data)
+    
+def Bookingslip(request):
+    pass
