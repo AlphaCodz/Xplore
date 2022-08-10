@@ -166,6 +166,11 @@ def PaidBookings(request):
 
 @api_view(["GET"])
 def all_bookings(request, status):
+    choice_map = {
+        "D":"declined",
+        "P":"pending",
+        "A":"approved",
+    }
     qs = Booking.objects.filter(status = status)
     bookings = []
     for booking in qs:
@@ -174,5 +179,5 @@ def all_bookings(request, status):
             "customer": str(booking.customer),
         }
         bookings.append(json_form)
-    data = {status:bookings}
+    data = {choice_map[status]:bookings}
     return JsonResponse(data)
