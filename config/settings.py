@@ -25,7 +25,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4o%8s3lhq0#-7!wrx+08@i(-#6n_a9dy*+==)+av%27)@(vc6*'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'api',
     'tours',
     'admin_app',
-    'webadmin'
+    
 ]
 
 MIDDLEWARE = [

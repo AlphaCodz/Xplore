@@ -1,4 +1,3 @@
-from django.http import HttpResponse, JsonResponse
 from django.http import JsonResponse
 from api.models import Customer
 from api.serializers import CustomerSerializer
@@ -7,11 +6,14 @@ from rest_framework.decorators import permission_classes, api_view, authenticati
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from tours.models import *
 from .serializers import AdminSerializer, ReasonSerializer
+from tours.models import Customer, Booking
+from .serializers import AdminSerializer
 from rest_framework.views import APIView
 from .serializers import MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
 from .models import Reason
+from .models import Admin
 
 
 # Create your views here.
@@ -32,7 +34,6 @@ class CustomerList(generics.ListAPIView):
     
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-# @permission_classes([permissions.IsAdminUser])
 def detail_counts(request):
     pending = Booking.objects.filter(status="P").count()
     approved = Booking.objects.filter(status="A").count()
@@ -153,27 +154,32 @@ def PaidBookings(request):
     queryset = Booking.objects.filter(paid=True)
     paid_bookings = []
     
-    for paid in queryset:
+    for bookings in paid_bookings:
         query = {
-            "customer_id":paid.customer.id,
-            "first_name": paid.customer.first_name,
-            "last_name": paid.customer.last_name,
-            "paid_since": paid.created_at
-            
+            "booking_id":bookings.id,
+            "customer": bookings.customer,
         }
         paid_bookings.append(query)
     data =  {
         "paid": paid_bookings
     }
     return JsonResponse(data)
-    
 class ReasonFor(generics.CreateAPIView):
     queryset = Reason.objects.all()
     serializer_class = ReasonSerializer
     # permission_classes = (permissions.IsAdminUser,)
     
         
-        
-        
-        
-        
+@api_view(["GET"])
+def all_bookings(request, status):
+    qs = Booking.objects.filter(status = status)
+    bookings = []
+    for booking in qs:
+        json_form = {
+            "booking_id": booking.id,
+            "customer": str(booking.customer),
+        }
+        bookings.append(json_form)
+    data = {status:bookings}
+    return JsonResponse(data)
+

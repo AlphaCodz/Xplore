@@ -78,14 +78,13 @@ class Booking(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     approved_by = models.ForeignKey(Admin, on_delete=models.PROTECT, null=True)
-    
-
-    # passport = models.ForeignKey(Passport, on_delete=models.PROTECT, null=True)
+    #approved_by = models.ForeignKey(Admin, on_delete=models.PROTECT, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    #reason = models.CharField(max_length=50, choices= REASON_CHOICES, null=True, blank=True)
+    #other_reasons = models.TextField(max_length=300, null=True, blank=True)
     
     objects = models.Manager()
-    # pending = PendingManager()
-    # approved = ApprovedManager()
-    # declined = DeclinedManager()
+    
     
     def __str__(self):
         return f"{self.customer} {self.status}"
@@ -96,3 +95,8 @@ class Passport(models.Model):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name="passports")
     def __str__(self):
         return f"/media/{self.image}"
+    
+
+
+    
+ 

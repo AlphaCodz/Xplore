@@ -13,5 +13,6 @@ urlpatterns = [
     path('approved', views.ApprovedBookings, name="approved"),
     path('declined', views.DeclinedBookings, name="declined"),
     path('paid', views.PaidBookings, name="paid"),
-    path('reason', ReasonFor.as_view(), name="reason")
+    path('reason', ReasonFor.as_view(), name="reason"),
+    path('all-bookings/<status>', views.all_bookings, name='all-bookings'),
 ]
