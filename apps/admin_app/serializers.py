@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
-from .models import AdminReg
+from .models import Admin, Reason
 import re
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenObtainSerializer
@@ -15,7 +15,7 @@ class AdminSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators =[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
     class Meta:
-        model = AdminReg
+        model = Admin
         fields = ("first_name", "last_name", "email", "staff_number", "home_address", "password", "password2", "birthday")
         extra_kwargs = {
             "first_name": {'required':True},
@@ -45,7 +45,7 @@ class AdminSerializer(serializers.ModelSerializer):
         )
         customer.password = make_password(validated_data['password'])
         customer.save()
-        admin = AdminReg.objects.create(
+        admin = Admin.objects.create(
             email=validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
@@ -74,3 +74,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["access"] = str(refresh.access_token)
 
         return data
+    
+class ReasonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reason
+        fields = ("reason", "other_reasons")
+        extra_kwargs = {
+            "reason": {"required":False},
+            "other_reasons": {"required":False}
+        }

@@ -1,6 +1,6 @@
 from django.db import models
 from api.models import Customer
-from admin_app.models import AdminReg
+from admin_app.models import Admin
 from djmoney.models.fields import MoneyField
 
 class Tour(models.Model):
@@ -52,11 +52,6 @@ class Guide(models.Model):
         return f"Company: {self.agent} ____ Guide: {self.name}"
 
 class Booking(models.Model):
-    REASON_CHOICES = (
-        ('IMAGE_NOT_CLEAR', "SUBMITTED IMAGES ARE NOT CLEAR ENOUGH"),
-        ('FAKE_DOCUMENT', "DOCUMENTS ARE SUSPECTED TO BE FAKE"),
-        ('USER_DETAILS_CONFLICT', "SOME DETAILS ARE NOT CORRECT OR CORRESPONDING")
-    )
     
     CATEGORY_CHOICES = (
         ("S", "single"),
@@ -82,9 +77,8 @@ class Booking(models.Model):
     payment_reference = models.CharField(max_length=30, null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
-    approved_by = models.ForeignKey(AdminReg, on_delete=models.PROTECT, null=True)
-    reason = models.CharField(max_length=50, choices= REASON_CHOICES, null=True, blank=True)
-    other_reasons = models.TextField(max_length=300, null=True, blank=True)
+    approved_by = models.ForeignKey(Admin, on_delete=models.PROTECT, null=True)
+    
 
     # passport = models.ForeignKey(Passport, on_delete=models.PROTECT, null=True)
     

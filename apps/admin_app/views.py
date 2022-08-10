@@ -6,11 +6,12 @@ from rest_framework import generics, permissions
 from rest_framework.decorators import permission_classes, api_view, authentication_classes
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from tours.models import *
-from .serializers import AdminSerializer
+from .serializers import AdminSerializer, ReasonSerializer
 from rest_framework.views import APIView
 from .serializers import MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
+from .models import Reason
 
 
 # Create your views here.
@@ -74,7 +75,7 @@ def UserDetailsList(request, id):
 
 
 class RegAdmin(generics.CreateAPIView):
-    queryset = AdminReg.objects.all()
+    queryset = Admin.objects.all()
     #permission_classes = (permissions.IsAdminUser,)
     serializer_class = AdminSerializer
         
@@ -139,8 +140,6 @@ def DeclinedBookings(request):
           "first_name":declined.customer.first_name,
           "last_name":declined.customer.last_name,
           "declined_since": declined.created_at,  
-          "reason_for_decline": declined.reason,
-          "other_reasons": declined.other_reasons
         }
         declined_bookings.append(query)
     context = {
@@ -168,5 +167,13 @@ def PaidBookings(request):
     }
     return JsonResponse(data)
     
-def Bookingslip(request):
-    pass
+class ReasonFor(generics.CreateAPIView):
+    queryset = Reason.objects.all()
+    serializer_class = ReasonSerializer
+    # permission_classes = (permissions.IsAdminUser,)
+    
+        
+        
+        
+        
+        

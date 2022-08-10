@@ -12,5 +12,6 @@ urlpatterns = [
     path('pending',views.PendingBookings, name="pending"),
     path('approved', views.ApprovedBookings, name="approved"),
     path('declined', views.DeclinedBookings, name="declined"),
-    path('paid', views.PaidBookings, name="paid")
+    path('paid', views.PaidBookings, name="paid"),
+    path('reason', ReasonFor.as_view(), name="reason")
 ]
