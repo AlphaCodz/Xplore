@@ -92,78 +92,6 @@ class AdminDetail(APIView):
             serializer = AdminSerializer(user)
             return Response(serializer.data)
         
-@api_view(["GET"])
-@permission_classes([permissions.IsAdminUser])
-def PendingBookings(request):
-    queryset = Booking.objects.filter(status="P")
-    pending_bookings = []
-    
-    for pending in queryset:
-        query = {
-        "customer_id": pending.customer.id,
-        "first_name": pending.customer.first_name,
-        "last_name": pending.customer.last_name,
-        "pending_since": pending.created_at
-        }
-        pending_bookings.append(query)
-    context_data = {"pending_users":pending_bookings}
-            
-    return JsonResponse(context_data)
-
-@api_view(["GET"])
-@permission_classes([permissions.IsAdminUser])
-def ApprovedBookings(request):
-    queryset = Booking.objects.filter(status="A")
-    approved_bookings = []
-    
-    for approved in queryset:
-        query = {
-            "customer_id":approved.customer.id,
-            "first_name": approved.customer.first_name,
-            "last_name": approved.customer.last_name,
-            "approved_since": approved.created_at
-        }
-        approved_bookings.append(query)
-    context = {
-        "approved_users":approved_bookings
-    }
-    return JsonResponse(context)
-
-@api_view(["GET"])   
-@permission_classes([permissions.IsAdminUser])     
-def DeclinedBookings(request):
-    queryset = Booking.objects.filter(status="D")
-    declined_bookings = []
-    
-    for declined in queryset:
-        query = {
-          "customer_id":declined.customer.id,
-          "first_name":declined.customer.first_name,
-          "last_name":declined.customer.last_name,
-          "declined_since": declined.created_at,  
-        }
-        declined_bookings.append(query)
-    context = {
-        "declined":declined_bookings
-    }
-    return JsonResponse(context)
-
-@api_view(["GET"])
-@permission_classes([permissions.IsAdminUser])
-def PaidBookings(request):
-    queryset = Booking.objects.filter(paid=True)
-    paid_bookings = []
-    
-    for bookings in paid_bookings:
-        query = {
-            "booking_id":bookings.id,
-            "customer": bookings.customer,
-        }
-        paid_bookings.append(query)
-    data =  {
-        "paid": paid_bookings
-    }
-    return JsonResponse(data)
 class ReasonFor(generics.CreateAPIView):
     queryset = Reason.objects.all()
     serializer_class = ReasonSerializer
@@ -172,7 +100,7 @@ class ReasonFor(generics.CreateAPIView):
         
 @api_view(["GET"])
 def all_bookings(request, status):
-    qs = Booking.objects.filter(status = status)
+    qs = Booking.objects.filter(status=status)
     bookings = []
     for booking in qs:
         json_form = {
