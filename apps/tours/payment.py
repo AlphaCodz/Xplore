@@ -1,8 +1,8 @@
 import requests
-import environ
+#import environ
 
-env = environ.Env()
-environ.Env.read_env()
+#env = environ.Env()
+#environ.Env.read_env()
 
 class Paystack:
     def __init__(self):
@@ -24,6 +24,3 @@ class Paystack:
         response = requests.get(url, headers=self.headers)
         return response.json()
 
-        
-
-p = Paystack()

@@ -99,5 +99,12 @@ class SubmitPayment(generics.UpdateAPIView):
     def put(self, request, *args, **kwargs):
         obj = self.get_queryset()
         data = BookingSerializer(obj)
-        print(data)
+        refrence = self.request.POST.get("reference")
+        print(refrence)
+        P = Paystack()
+        status = P.verify_transaction(refrence)["data"]["status"]
+        print(status)
+        if status == "success":
+            obj.paid == True
+            obj.save()
         return Response(data.data)

@@ -1,7 +1,7 @@
 from dataclasses import fields
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
-from .models import AdminReg, Tour, Booking, Package, Passport
+from .models import Tour, Booking, Package, Passport
 import re
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenObtainSerializer
@@ -28,7 +28,7 @@ class BookingSerializer(serializers.ModelSerializer):
             "status", 
             "paid", 
             "passports",
-            "payment")
+            )
         extra_kwargs = {
             'tour': {'required': False},
             'agent': {'required': False},

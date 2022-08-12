@@ -1,6 +1,3 @@
-from urllib import response
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
 from django.http import JsonResponse
 from api.models import Customer
 from api.serializers import CustomerSerializer
@@ -8,12 +5,15 @@ from rest_framework import generics, permissions
 from rest_framework.decorators import permission_classes, api_view, authentication_classes
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from tours.models import *
+from .serializers import AdminSerializer, ReasonSerializer
+from tours.models import Customer, Booking
 from .serializers import AdminSerializer
 from rest_framework.views import APIView
 from .serializers import MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from tours.serializers import BookingSerializer
-from django.views.generic import ListView, DetailView
+from rest_framework.response import Response
+from .models import Reason
+from .models import Admin
 
 
 # Create your views here.
@@ -34,7 +34,6 @@ class CustomerList(generics.ListAPIView):
     
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([permissions.IsAdminUser])
 def detail_counts(request):
     pending = Booking.objects.filter(status="P").count()
     approved = Booking.objects.filter(status="A").count()
@@ -51,12 +50,13 @@ def detail_counts(request):
     return JsonResponse(query)
 
 @api_view(["GET"])
+@permission_classes([permissions.IsAuthenticated])
 @permission_classes([permissions.IsAdminUser])
 def UserDetailsList(request, id):
-   user = Customer.objects.get(id=id)
-   details = Booking.objects.filter(customer=user)
-   detail_list = []
-   for details in details:
+    user = Customer.objects.get(id=id)
+    details = Booking.objects.filter(customer=user)
+    detail_list = []
+    for details in details:
         query = {
         "user_id":details.customer.id,
         "Booking_id":details.id,
@@ -66,31 +66,48 @@ def UserDetailsList(request, id):
         "email":details.customer.email,
         "package_type":details.package.package_type,
         "package_price": str(details.package.price),
-        "number_of_person": details.individuals
+        "number_of_person": details.individuals,
+        "location": details.tour.location
         }
         detail_list.append(query)
-   context_data = {"detail_list":detail_list}
+    context_data = {"detail_list":detail_list}
             
-   return JsonResponse(context_data)
+    return JsonResponse(context_data)
 
 
 class RegAdmin(generics.CreateAPIView):
-    queryset = AdminReg.objects.all()
-    permission_classes = (permissions.IsAdminUser,)
+    queryset = Admin.objects.all()
+    #permission_classes = (permissions.IsAdminUser,)
     serializer_class = AdminSerializer
-    
-class AdminDetails(APIView):
-    permission_classes = (permissions.IsAdminUser,)
-    def get(self, request, format=None):
-        user= request.user
-        if request.user:
-            serializer = AdminSerializer(user)
-            return response(serializer.data)
         
 class MyTokenObtainPairView(TokenObtainPairView):
-    permission_classes = (permissions.IsAdminUser,)
     serializer_class = MyTokenObtainPairSerializer
     
     
-
+class AdminDetail(APIView):
+    permission_classes= (permissions.IsAdminUser,)
+    def get(self, request, format=None):
+        user = request.user
+        if request.user:
+            serializer = AdminSerializer(user)
+            return Response(serializer.data)
+        
+class ReasonFor(generics.CreateAPIView):
+    queryset = Reason.objects.all()
+    serializer_class = ReasonSerializer
+    # permission_classes = (permissions.IsAdminUser,)
+    
+        
+@api_view(["GET"])
+def all_bookings(request, status):
+    qs = Booking.objects.filter(status=status)
+    bookings = []
+    for booking in qs:
+        json_form = {
+            "booking_id": booking.id,
+            "customer": str(booking.customer),
+        }
+        bookings.append(json_form)
+    data = {status:bookings}
+    return JsonResponse(data)
 

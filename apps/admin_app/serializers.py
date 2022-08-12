@@ -1,21 +1,29 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
-from tours.models import AdminReg, Tour, Booking, Package, Passport
+from .models import Admin, Reason
+from .models import Admin
 import re
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenObtainSerializer
+from rest_framework.validators import UniqueValidator
+from api.models import Customer
 
 class AdminSerializer(serializers.ModelSerializer):
-    
+    email = serializers.EmailField(
+        required = True,
+        validators = [UniqueValidator(queryset= Customer.objects.all())]
+    )
+    password = serializers.CharField(write_only=True, required=True, validators =[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
     class Meta:
-        model = AdminReg
-        fields = ("first_name", "last_name", "email", "staff_no", "home_address", "password", "password2", "birthday")
+        model = Admin
+        fields = ("first_name", "last_name", "email", "staff_number", "home_address", "password", "password2", "birthday")
         extra_kwargs = {
             "first_name": {'required':True},
             "last_name": {'required':True},
             "email": {'required':True},
             "home_address": {'required':True},
-            "staff_no": {'required':True},
+            "birthday": {"required":True},
         }
     
     def validate(self, attrs):
@@ -26,20 +34,27 @@ class AdminSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"password": "Password fields must contain upper and lowercase"})
         if not re.findall(pattern, attrs["password"]):
             raise serializers.ValidationError({"password": "password must contain special character"})
-        if attrs["password"] == attrs["staff_no"]:
+        if attrs["password"] == attrs["staff_number"]:
             raise serializers.ValidationError({"password": "Password too common"})
         return attrs  
     
     def create(self, validated_data):
-        admin = AdminReg.objects.create(
-        email=validated_data['email'],
-        first_name=validated_data['first_name'],
-        last_name=validated_data['last_name'],
-        home_address = validated_data['home_address'],
-        birthday = validated_data['birthday'],
-        staff_no = validated_data['staff_no']
+        customer = Customer.objects.create(
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+        )
+        customer.password = make_password(validated_data['password'])
+        customer.save()
+        admin = Admin.objects.create(
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            customer = customer,
+            home_address = validated_data['home_address'],
+            birthday = validated_data['birthday'],
+            staff_number = validated_data['staff_number']
         )  
-        admin.password = make_password('password')
         admin.save()
         return admin
     
@@ -60,3 +75,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["access"] = str(refresh.access_token)
 
         return data
+    
+class ReasonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reason
+        fields = ("reason", "other_reasons")
+        extra_kwargs = {
+            "reason": {"required":False},
+            "other_reasons": {"required":False}
+        }

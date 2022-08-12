@@ -1,23 +1,7 @@
 from django.db import models
-from django.forms import DateField
 from api.models import Customer
+from admin_app.models import Admin
 from djmoney.models.fields import MoneyField
-from admin_app.models import AdminReg
-
-# # Create your models here.
-# class PendingManager(models.Manager):
-#     def get_query(self):
-#         return super(PendingManager, self).get_queryset().filter(status="P")
-
-# class ApprovedManager(models.Manager):
-#     def get_query(self):
-#         return super(ApprovedManager, self).get_queryset().filter(status="P")
-    
-# class DeclinedManager(models.Manager):
-#     def get_query(self):
-#         return super(DeclinedManager, self).get_queryset().filter(status="D")
-
-# post = get_object_or_404(Post, id=post_id, status='published')
 
 class Tour(models.Model):
     name = models.CharField(max_length=100)
@@ -67,8 +51,8 @@ class Guide(models.Model):
     def __str__(self):
         return f"Company: {self.agent} ____ Guide: {self.name}"
 
-
 class Booking(models.Model):
+    
     CATEGORY_CHOICES = (
         ("S", "single"),
         ("C", "couple"),
@@ -93,13 +77,14 @@ class Booking(models.Model):
     payment_reference = models.CharField(max_length=30, null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
-    approved_by = models.ForeignKey(AdminReg, on_delete=models.PROTECT, null=True)
-    # passport = models.ForeignKey(Passport, on_delete=models.PROTECT, null=True)
+    approved_by = models.ForeignKey(Admin, on_delete=models.PROTECT, null=True)
+    #approved_by = models.ForeignKey(Admin, on_delete=models.PROTECT, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    #reason = models.CharField(max_length=50, choices= REASON_CHOICES, null=True, blank=True)
+    #other_reasons = models.TextField(max_length=300, null=True, blank=True)
     
     objects = models.Manager()
-    # pending = PendingManager()
-    # approved = ApprovedManager()
-    # declined = DeclinedManager()
+    
     
     def __str__(self):
         return f"{self.customer} {self.status}"
