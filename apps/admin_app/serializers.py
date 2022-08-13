@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
+from .models import Admin, Reason
 from .models import Admin
 import re
 from django.contrib.auth.hashers import make_password
@@ -74,3 +75,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["access"] = str(refresh.access_token)
 
         return data
+    
+class ReasonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reason
+        fields = ("reason", "other_reasons")
+        extra_kwargs = {
+            "reason": {"required":False},
+            "other_reasons": {"required":False}
+        }
