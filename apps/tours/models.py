@@ -13,12 +13,27 @@ class Tour(models.Model):
     image = models.ImageField(upload_to="tours/%y/%m/%d/", null=True)
     def __str__(self):
         return self.name
+    
+class TourAgency(models.Model):
+    name = models.CharField(max_length=100, null=True)
+    profile_pic = models.ImageField(upload_to= "media/adminProfile_images/")
+    email = models.EmailField(editable=True, unique= True, null=True)
+    address = models.CharField(max_length=200, unique=True, editable=True, null=True)
+    license = models.ImageField(upload_to="tour_agency/license/")
+    CAC = models.ImageField(upload_to="tour_agency/CAC/" )
+    
+    def __str__(self):
+        return f"{self.name}"
 
 class Agent(models.Model):
-    name = models.CharField(max_length=50)
-    logo = models.ImageField(upload_to="agents/", null=True)
+    
+    first_name = models.CharField(max_length=100, null=True) 
+    last_name = models.CharField(max_length=100, null=True)
+    profile_pic = models.ImageField(upload_to ="agents/profile_pic/", null=True)
+    tour_agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
+   
     def __str__(self):
-        return self.name
+        return f" Tour Agent: {self.first_name} ____________ From: {self.tour_agency}"
 
 class Package(models.Model):
     TYPE_CHOICES = (
@@ -79,7 +94,7 @@ class Booking(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     approved_by = models.ForeignKey(Admin, on_delete=models.PROTECT, null=True)
     #approved_by = models.ForeignKey(Admin, on_delete=models.PROTECT, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
     #reason = models.CharField(max_length=50, choices= REASON_CHOICES, null=True, blank=True)
     #other_reasons = models.TextField(max_length=300, null=True, blank=True)
     
@@ -95,6 +110,21 @@ class Passport(models.Model):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name="passports")
     def __str__(self):
         return f"/media/{self.image}"
+    
+class Reason(models.Model):
+    REASON_CHOICES = (
+        ('IMAGE_NOT_CLEAR', "SUBMITTED IMAGES ARE NOT CLEAR ENOUGH"),
+        ('FAKE_DOCUMENT', "DOCUMENTS ARE SUSPECTED TO BE FAKE"),
+        ('USER_DETAILS_CONFLICT', "SOME DETAILS ARE NOT CORRECT OR CORRESPONDING")
+    )
+     
+    reason = models.CharField(max_length=50, choices= REASON_CHOICES, null=True)
+    other_reasons = models.TextField(max_length=300, null=True)
+
+
+    # Tours Agent Models 
+
+    
     
 
 
