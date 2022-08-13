@@ -165,3 +165,8 @@ SIMPLE_JWT = {
 
 # Base url to serve media files
 MEDIA_URL = '/media/'
+
+#aws ses setings
+EMAIL_BACKEND = 'django_ses.SESBackend'
+AWS_ACCESS_KEY_ID = 'AKIA2H7MABLPDHW7YQJE'
+AWS_SECRET_ACCESS_KEY = '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'
