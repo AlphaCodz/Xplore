@@ -4,24 +4,15 @@ from api.serializers import CustomerSerializer
 from rest_framework import generics, permissions
 from rest_framework.decorators import permission_classes, api_view, authentication_classes
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-<<<<<<< HEAD
-from .serializers import AdminSerializer, ReasonSerializer
-from tours.models import  Booking
-from .serializers import AdminSerializer
-=======
 from tours.models import *
 from .serializers import AdminSerializer, ReasonSerializer, MyTokenObtainPairSerializer
 from tours.models import Customer, Booking
->>>>>>> 97486daa742a4d3ae3bdeece0d1d3f859d069a63
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
-<<<<<<< HEAD
-from .models import Reason, Admin
-=======
 from tours.models import Reason
 from .models import Admin
->>>>>>> 97486daa742a4d3ae3bdeece0d1d3f859d069a63
+from tours.serializers import TourAgencySerializer
 
 
 # Create your views here.
@@ -109,23 +100,24 @@ class ReasonFor(generics.CreateAPIView):
 @api_view(["GET"])
 def all_bookings(request, status):
     qs = Booking.objects.filter(status=status)
+    qs2 = Agent.objects.all()
     bookings = []
     for booking in qs:
         json_form = {
             "booking_id": booking.id,
             "customer": str(booking.customer),
+            "Assigned Tour Agent": str(booking.assign_tour_agent),
+            "From": str(booking.assign_tour_agent.tour_agency)
+
         }
         bookings.append(json_form)
     data = {status:bookings}
-<<<<<<< HEAD
-    return JsonResponse(data)
-=======
     return JsonResponse(data)
 
 
-# GET ADMIN DATA PER TOUR AGENCY
-@api_view(["GET"])
-@permission_classes([permissions.IsAdminUser])
-def TourAgency(request):
-    queryset = Tour.objects.all()
->>>>>>> 97486daa742a4d3ae3bdeece0d1d3f859d069a63
+# Register as Tour Agency
+class RegTourAgency(generics.CreateAPIView):
+    queryset = TourAgency.objects.all()
+    serializer_class = TourAgencySerializer
+
+    
