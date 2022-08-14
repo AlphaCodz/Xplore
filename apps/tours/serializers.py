@@ -1,7 +1,7 @@
 from dataclasses import fields
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
-from .models import Tour, Booking, Package, Passport
+from .models import Tour, Booking, Package, Passport, TourAgency
 import re
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenObtainSerializer
@@ -79,3 +79,25 @@ class PackageSerializer(serializers.ModelSerializer):
             "description",
             "price",
             )
+
+class TourAgencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TourAgency
+        fields = ("name", "agency_logo", "agency_email", "address", "license", "cac")
+        extra_kwargs = {
+            "name":{'required':True},
+            "agency_logo":{'required':True},
+            "agency_email": {'required':True},
+            "address": {'required':True},
+            "license": {'required': True}
+        }
+        
+    def create(self, validated_data):
+        Tour_Agency = TourAgency.objects.create(
+            name = validated_data["name"],
+            email = validated_data["agency_email"],
+            address = validated_data["address"],
+            license = validated_data["license"],
+            cac = validated_data["cac"]
+        )
+        Tour_Agency.save()

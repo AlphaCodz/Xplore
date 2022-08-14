@@ -16,24 +16,24 @@ class Tour(models.Model):
     
 class TourAgency(models.Model):
     name = models.CharField(max_length=100, null=True)
-    profile_pic = models.ImageField(upload_to= "media/adminProfile_images/")
-    email = models.EmailField(editable=True, unique= True, null=True)
+    agency_logo = models.ImageField(upload_to= "media/agency_logo/", null=True)
+    agency_email = models.EmailField(editable=True, unique= True, null=True)
     address = models.CharField(max_length=200, unique=True, editable=True, null=True)
     license = models.ImageField(upload_to="tour_agency/license/")
-    CAC = models.ImageField(upload_to="tour_agency/CAC/" )
+    cac = models.ImageField(upload_to="tour_agency/CAC/" )
+    # payment_info = models.IntegerField( unique=True, null=True)
     
     def __str__(self):
         return f"{self.name}"
 
 class Agent(models.Model):
-    
     first_name = models.CharField(max_length=100, null=True) 
     last_name = models.CharField(max_length=100, null=True)
     profile_pic = models.ImageField(upload_to ="agents/profile_pic/", null=True)
     tour_agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
    
     def __str__(self):
-        return f" Tour Agent: {self.first_name} ____________ From: {self.tour_agency}"
+        return f"{self.first_name} {self.last_name}"
 
 class Package(models.Model):
     TYPE_CHOICES = (
@@ -41,7 +41,7 @@ class Package(models.Model):
         ("V","VIP"),
         ("VV","VVIP")
     )
-    agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
+    tour_by_Agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, null=True)
     package_type = models.CharField(max_length=3, choices=TYPE_CHOICES, default="R", null=True)
@@ -58,14 +58,6 @@ class Package(models.Model):
     def __str__(self):
         return f"{self.name}"
 
-class Guide(models.Model):
-    name = models.CharField(max_length=50)
-    agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="guides/", null=True)
-    
-    def __str__(self):
-        return f"Company: {self.agent} ____ Guide: {self.name}"
-
 class Booking(models.Model):
     
     CATEGORY_CHOICES = (
@@ -81,7 +73,8 @@ class Booking(models.Model):
     )
     
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, related_name="customer")
-    agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
+    # The Tour being booked was posted by which agency? This must be predetermined 
+    Agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
     package = models.ForeignKey(Package, on_delete=models.CASCADE)
     category = models.CharField(max_length=5, choices=CATEGORY_CHOICES)
@@ -93,10 +86,10 @@ class Booking(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     approved_by = models.ForeignKey(Admin, on_delete=models.PROTECT, null=True)
-    #approved_by = models.ForeignKey(Admin, on_delete=models.PROTECT, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
-    #reason = models.CharField(max_length=50, choices= REASON_CHOICES, null=True, blank=True)
-    #other_reasons = models.TextField(max_length=300, null=True, blank=True)
+   
+    #Assign Tour Agents to Customer
+    assign_tour_agent = models.ForeignKey(Agent, on_delete=models.PROTECT, null=True)
     
     objects = models.Manager()
     
