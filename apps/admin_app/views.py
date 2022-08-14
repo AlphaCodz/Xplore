@@ -74,7 +74,7 @@ def UserDetailsList(request, id):
     return JsonResponse(context_data)
 
 
-class RegAdmin(generics.CreateAPIView):
+class RegisterAdmin(generics.CreateAPIView):
     queryset = Admin.objects.all()
     #permission_classes = (permissions.IsAdminUser,)
     serializer_class = AdminSerializer
@@ -116,8 +116,6 @@ def all_bookings(request, status):
 
 
 # Register as Tour Agency
-class RegTourAgency(generics.CreateAPIView):
+class RegisterTourAgency(generics.CreateAPIView):
     queryset = TourAgency.objects.all()
     serializer_class = TourAgencySerializer
-
-    
