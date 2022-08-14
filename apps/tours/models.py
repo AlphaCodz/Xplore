@@ -42,7 +42,7 @@ class Package(models.Model):
         ("V","VIP"),
         ("VV","VVIP")
     )
-    tour_by_Agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
+    #tour_by_Agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, null=True)
     type = models.CharField(max_length=3, choices=TYPE_CHOICES, default="R", null=True)
@@ -81,7 +81,7 @@ class Booking(models.Model):
     category = models.CharField(max_length=5, choices=CATEGORY_CHOICES)
     individuals = models.IntegerField(null=True, default = 1)
     paid = models.BooleanField(default=False)
-    email = models.ForeignKey(Customer, related_name='emails', on_delete=models.CASCADE, null=True)
+    #email = models.ForeignKey(Customer, related_name='emails', on_delete=models.CASCADE, null=True)
     package = models.ForeignKey(Package, related_name='packages', on_delete=models.CASCADE, null=True)
     payment_reference = models.CharField(max_length=30, null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
