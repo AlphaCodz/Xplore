@@ -83,7 +83,7 @@ class PackageSerializer(serializers.ModelSerializer):
 class TourAgencySerializer(serializers.ModelSerializer):
     class Meta:
         model = TourAgency
-        fields = ("name", "agency_logo", "agency_email", "address", "license", "cac")
+        fields = ("name", "logo", "email", "address", "license", "cac")
         extra_kwargs = {
             "name":{'required':True},
             "agency_logo":{'required':True},
@@ -95,7 +95,7 @@ class TourAgencySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         Tour_Agency = TourAgency.objects.create(
             name = validated_data["name"],
-            email = validated_data["agency_email"],
+            email = validated_data["email"],
             address = validated_data["address"],
             license = validated_data["license"],
             cac = validated_data["cac"]
