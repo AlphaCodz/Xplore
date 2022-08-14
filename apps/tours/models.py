@@ -90,7 +90,7 @@ class Booking(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
    
     #Assign Tour Agents to Customer
-    assign_tour_agent = models.ForeignKey(Agent, on_delete=models.PROTECT, null=True)
+    agent = models.ForeignKey(Agent, on_delete=models.PROTECT, null=True)
     
     objects = models.Manager()
     
