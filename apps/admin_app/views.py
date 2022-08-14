@@ -4,14 +4,24 @@ from api.serializers import CustomerSerializer
 from rest_framework import generics, permissions
 from rest_framework.decorators import permission_classes, api_view, authentication_classes
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+<<<<<<< HEAD
 from .serializers import AdminSerializer, ReasonSerializer
 from tours.models import  Booking
 from .serializers import AdminSerializer
+=======
+from tours.models import *
+from .serializers import AdminSerializer, ReasonSerializer, MyTokenObtainPairSerializer
+from tours.models import Customer, Booking
+>>>>>>> 97486daa742a4d3ae3bdeece0d1d3f859d069a63
 from rest_framework.views import APIView
-from .serializers import MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
+<<<<<<< HEAD
 from .models import Reason, Admin
+=======
+from tours.models import Reason
+from .models import Admin
+>>>>>>> 97486daa742a4d3ae3bdeece0d1d3f859d069a63
 
 
 # Create your views here.
@@ -107,4 +117,15 @@ def all_bookings(request, status):
         }
         bookings.append(json_form)
     data = {status:bookings}
+<<<<<<< HEAD
     return JsonResponse(data)
+=======
+    return JsonResponse(data)
+
+
+# GET ADMIN DATA PER TOUR AGENCY
+@api_view(["GET"])
+@permission_classes([permissions.IsAdminUser])
+def TourAgency(request):
+    queryset = Tour.objects.all()
+>>>>>>> 97486daa742a4d3ae3bdeece0d1d3f859d069a63

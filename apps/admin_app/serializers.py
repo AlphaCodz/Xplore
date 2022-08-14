@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
-from .models import Admin, Reason
 from .models import Admin
+from tours.models import Reason
 import re
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenObtainSerializer
@@ -75,7 +75,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["access"] = str(refresh.access_token)
 
         return data
-    
+                        
+                                        # Test Reason serializers  
 class ReasonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reason
@@ -84,3 +85,15 @@ class ReasonSerializer(serializers.ModelSerializer):
             "reason": {"required":False},
             "other_reasons": {"required":False}
         }
+        def validate(self, attrs):
+            if attrs["reason"] == attrs["other_reasons"]:
+                raise serializers.ValidationError({"reason": "Can't use same reasons"})
+            return attrs
+        
+        def create(self, validated_data):
+            reason = Reason.objects.all(
+                reason = validated_data["reason"],
+                other_reasons = validated_data["other_reasons"]
+            )
+            reason.save()
+            return reason

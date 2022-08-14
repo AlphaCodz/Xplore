@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Admin, Tour, Agent, Package, Guide, Booking
-from .models import Tour, Agent, Package, Guide, Booking
+from .models import Tour, Agent, Package, Guide, Booking, TourAgency
 
 
 # Register your models here.
@@ -11,4 +10,5 @@ admin.site.register(Guide)
 # admin.site.register(Booking)
 # admin.site.register(Admin)
 admin.site.register(Booking)
+admin.site.register(TourAgency)
 
