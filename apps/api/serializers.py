@@ -5,6 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 from phonenumber_field.serializerfields import PhoneNumberField
 from .models import Customer
 import re
+from django.core.mail import send_mail
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,7 +25,7 @@ class RegisterSerilizer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True, required=True)
     class Meta:
         model = Customer
-        fields = ("id", 'password', 'password2', 'email', 'first_name', 'last_name')
+        fields = ("id", 'password', 'password2', 'email', 'first_name', 'last_name', 'phone_number',)
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True},
@@ -51,4 +52,11 @@ class RegisterSerilizer(serializers.ModelSerializer):
         )  
         customer.set_password(raw_password = validated_data['password'])
         customer.save()
+        send_mail(
+            "Welcome",
+            "welcome",
+            "jenake8@gmail.com",
+            [validated_data["email"]],
+            fail_silently=False,
+        )
         return customer 
