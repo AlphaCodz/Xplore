@@ -106,8 +106,8 @@ def all_bookings(request, status):
         json_form = {
             "booking_id": booking.id,
             "customer": str(booking.customer),
-            "Assigned Tour Agent": str(booking.assign_tour_agent),
-            "From": str(booking.assign_tour_agent.tour_agency)
+            "Assigned Tour Agent": str(booking.agent),
+            "From": str(booking.agent.tour_agency)
 
         }
         bookings.append(json_form)
