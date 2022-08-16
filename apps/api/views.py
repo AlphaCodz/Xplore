@@ -59,6 +59,7 @@ def verify_email(request, token):
     validation = validate_token(token)
     if validation["status"]:
         user = Customer.objects.get(email=validation["user"]["email"])
+        print(user.verified_email)
         user.verified_email = True
         user.save()
     return HttpResponse(validation["message"])
