@@ -1,4 +1,3 @@
-import email
 from .serializers import CustomerSerializer, RegisterSerilizer
 from rest_framework import generics, permissions
 from .models import Customer

@@ -6,6 +6,7 @@ from phonenumber_field.serializerfields import PhoneNumberField
 from .models import Customer
 import re
 from django.core.mail import send_mail
+from .token import generate_token_from_user
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,9 +53,14 @@ class RegisterSerilizer(serializers.ModelSerializer):
         )  
         customer.set_password(raw_password = validated_data['password'])
         customer.save()
+        user = {
+            "email": validated_data["email"]
+        }
+        token = generate_token_from_user(user)
+        host = self.context["request"].get_host()
         send_mail(
             "Welcome",
-            "welcome",
+            f"welcome \n Click here to verify your email http://{host}/api/verify_email/{token}",
             "jenake8@gmail.com",
             [validated_data["email"]],
             fail_silently=False,

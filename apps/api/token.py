@@ -4,7 +4,6 @@ import jwt
 
 def generate_token_from_user(user):
     user["expires"] = str(datetime.now() + timedelta(minutes=5))
-    print(user)
     token = jwt.encode(user, SECRET_KEY, "HS256")
     return token
 
