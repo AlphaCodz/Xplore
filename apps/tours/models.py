@@ -35,7 +35,7 @@ class Package(models.Model):
     #tour_by_Agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, null=True)
-    package_type = models.CharField(max_length=3, choices=TYPE_CHOICES, default="R", null=True)
+    type = models.CharField(max_length=3, choices=TYPE_CHOICES, default="R", null=True)
     flight = models.CharField(max_length=20, null=True)
     accomondation = models.CharField(max_length=20, null=True)
     feeding = models.CharField(max_length=20, null=True)
@@ -64,22 +64,18 @@ class Booking(models.Model):
     )
     
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, related_name="customer")
-    # The Tour being booked was posted by which agency? This must be predetermined 
-    Agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
+    agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
     package = models.ForeignKey(Package, on_delete=models.CASCADE)
     category = models.CharField(max_length=5, choices=CATEGORY_CHOICES)
     individuals = models.IntegerField(null=True, default = 1)
     paid = models.BooleanField(default=False)
-    #email = models.ForeignKey(Customer, related_name='emails', on_delete=models.CASCADE, null=True)
     package = models.ForeignKey(Package, related_name='packages', on_delete=models.CASCADE, null=True)
     payment_reference = models.CharField(max_length=30, null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     approved_by = models.ForeignKey(Admin, on_delete=models.PROTECT, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
-   
-    #Assign Tour Agents to Customer
     agent = models.ForeignKey(Agent, on_delete=models.PROTECT, null=True)
     
     objects = models.Manager()
