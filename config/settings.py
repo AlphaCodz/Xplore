@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'api',
     'tours',
     'admin_app',
-    'touragency'
+    'touragency',
     
 ]
 
