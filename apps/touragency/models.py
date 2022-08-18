@@ -2,6 +2,7 @@ from django.db import models
 from tours.models import Customer
 
 # Create your models here.
+
 class TourAgency(models.Model):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE, null=True, related_name="Agencies")
     
@@ -19,3 +20,7 @@ class TourAgency(models.Model):
     
     def __repr__(self):
         return self.name + "is added"
+    
+    def __str__(self):
+        return f"{self.name}"
+    

@@ -14,6 +14,10 @@ class Tour(models.Model):
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
     image = models.ImageField(upload_to="tours/%y/%m/%d/", null=True)
+    
+    def get_tour(self):
+        return f"Tour: {self.name}" 
+    
     def __str__(self):
         return self.name
 
@@ -35,7 +39,7 @@ class Package(models.Model):
     #tour_by_Agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, null=True)
-    type = models.CharField(max_length=3, choices=TYPE_CHOICES, default="R", null=True)
+    package_type = models.CharField(max_length=3, choices=TYPE_CHOICES, default="R", null=True)
     flight = models.CharField(max_length=20, null=True)
     accomondation = models.CharField(max_length=20, null=True)
     feeding = models.CharField(max_length=20, null=True)

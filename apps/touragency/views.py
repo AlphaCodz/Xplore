@@ -6,16 +6,20 @@ from django.http import JsonResponse
 from .serializers import TourAgencySerializer, MyTokenObtainPairSerializer
 from rest_framework import generics
 from rest_framework_simplejwt.views import TokenObtainPairView
+from tours.models import Tour
+from tours.serializers import TourSerializer
 
 # Create your views here.
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 
+
 class RegisterTourAgency(generics.CreateAPIView):
     queryset = TourAgency.objects.all()
     serializer_class = TourAgencySerializer
-    
+
+
 
 @api_view(["GET"])
 @permission_classes([permissions.IsAuthenticated])
@@ -31,6 +35,11 @@ def AgencyDetails(request, id):
        "logo": details.logo
         }
         agency_list.append(query)
-    context_data = {"Tour_Agency_list":agency_list}
-            
+    context_data = {"Tour_Agency_list":agency_list}         
     return JsonResponse(context_data)
+
+# Add Tour
+class AddTour(generics.CreateAPIView):
+    queryset = Tour.objects.all()
+    serializer_class = TourSerializer
+    permission_classes = (permissions.IsAdminUser, )
