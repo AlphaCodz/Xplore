@@ -80,24 +80,3 @@ class PackageSerializer(serializers.ModelSerializer):
             "price",
             )
 
-class TourAgencySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TourAgency
-        fields = ("name", "logo", "email", "address", "license", "cac")
-        extra_kwargs = {
-            "name":{'required':True},
-            "agency_logo":{'required':True},
-            "agency_email": {'required':True},
-            "address": {'required':True},
-            "license": {'required': True}
-        }
-        
-    def create(self, validated_data):
-        Tour_Agency = TourAgency.objects.create(
-            name = validated_data["name"],
-            email = validated_data["email"],
-            address = validated_data["address"],
-            license = validated_data["license"],
-            cac = validated_data["cac"]
-        )
-        Tour_Agency.save()

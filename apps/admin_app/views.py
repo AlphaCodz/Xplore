@@ -12,7 +12,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
 from tours.models import Reason
 from .models import Admin
-from tours.serializers import TourAgencySerializer
+
 
 
 # Create your views here.
@@ -94,13 +94,12 @@ class AdminDetail(APIView):
 class ReasonFor(generics.CreateAPIView):
     queryset = Reason.objects.all()
     serializer_class = ReasonSerializer
-    # permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (permissions.IsAdminUser,)
     
         
 @api_view(["GET"])
 def all_bookings(request, status):
     qs = Booking.objects.filter(status=status)
-    qs2 = Agent.objects.all()
     bookings = []
     for booking in qs:
         json_form = {
@@ -116,6 +115,3 @@ def all_bookings(request, status):
 
 
 # Register as Tour Agency
-class RegisterTourAgency(generics.CreateAPIView):
-    queryset = TourAgency.objects.all()
-    serializer_class = TourAgencySerializer

@@ -30,6 +30,7 @@ urlpatterns = [
     path('api/admin/', include('admin_app.urls')),
     path('api/tours/', include('tours.urls')),
     re_path(r'^web/', include('webadmin.urls')),
+    re_path('api/agency/', include('touragency.urls')),
 ]
 
 if settings.DEBUG:

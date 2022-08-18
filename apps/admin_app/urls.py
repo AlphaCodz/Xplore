@@ -11,5 +11,4 @@ urlpatterns = [
     path('admin/details', AdminDetail.as_view(), name='admindetails'),
     path('reason', ReasonFor.as_view(), name="reason"),
     path('all-bookings/<status>', views.all_bookings, name='all-bookings'),
-    path('touragency/reg', RegisterTourAgency.as_view(), name="regtouragency")
 ]

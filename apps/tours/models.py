@@ -2,18 +2,8 @@ from django.db import models
 from api.models import Customer
 from admin_app.models import Admin
 from djmoney.models.fields import MoneyField
-    
-class TourAgency(models.Model):
-    name = models.CharField(max_length=100, null=True)
-    logo = models.ImageField(upload_to= "media/agency_logo/", null=True)
-    email = models.EmailField(editable=True, unique= True, null=True)
-    address = models.CharField(max_length=200, unique=True, editable=True, null=True)
-    license = models.ImageField(upload_to="media/tour_agency/license/")
-    cac = models.ImageField(upload_to="media/tour_agency/CAC/" )
-    # payment_info = models.IntegerField( unique=True, null=True)
-    
-    def __str__(self):
-        return f"{self.name}"
+from touragency.models import TourAgency
+
 
 class Tour(models.Model):
     agency = models.ForeignKey(TourAgency, on_delete= models.CASCADE, null=True)

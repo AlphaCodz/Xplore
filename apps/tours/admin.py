@@ -9,5 +9,4 @@ admin.site.register(Package)
 # admin.site.register(Booking)
 # admin.site.register(Admin)
 admin.site.register(Booking)
-admin.site.register(TourAgency)
 
