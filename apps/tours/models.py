@@ -6,7 +6,7 @@ from touragency.models import TourAgency
 
 
 class Tour(models.Model):
-    agency = models.ForeignKey(TourAgency, on_delete= models.CASCADE, null=True)
+    agency = models.OneToOneField(TourAgency, on_delete= models.CASCADE, null=True)
     name = models.CharField(max_length=100)
     description = models.TextField()
     details = models.TextField()

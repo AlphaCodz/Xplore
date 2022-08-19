@@ -15,15 +15,15 @@ from .models import Admin
 from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
 
 
-class ReadOnly(BasePermission):
-    def has_permission(self, request, view):
-        return request.method in SAFE_METHODS
+# class ReadOnly(BasePermission):
+#     def has_permission(self, request, view):
+#         return request.method in SAFE_METHODS
 
 # Create your views here.
 class CustomerList(generics.ListAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, permissions.IsAdminUser)
+    permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser)
     def get_queryset(self):
         page = self.request.GET.get("page")
         if not page:

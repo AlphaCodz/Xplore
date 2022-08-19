@@ -1,10 +1,15 @@
 from django.urls import path
 from . import views
-from .views import RegisterTourAgency, TokenObtainPairView, AddTour
+from rest_framework.urlpatterns import format_suffix_patterns
+from .views import RegisterTourAgency, TokenObtainPairView, AddTour, TourDetail
 
 urlpatterns = [
-    path('agency/<int:id>', views.AgencyDetails, name='agencies'),
+    path('<int:id>', views.AgencyDetails, name='agencies'),
     path('touragency/reg', RegisterTourAgency.as_view(), name="regtouragency"),
-    path('agency/login/', TokenObtainPairView.as_view(), name="agencylogin"),
-    path('agency/add/tour', AddTour.as_view(), name="addTour")
+    path('login/', TokenObtainPairView.as_view(), name="agencylogin"),
+    path('add/tour', AddTour.as_view(), name="addTour"),
+    path('tours/<int:pk>/', TourDetail.as_view(), name="tours" )
 ]
+ 
+ 
+urlpatterns = format_suffix_patterns(urlpatterns)
