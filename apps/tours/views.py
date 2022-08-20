@@ -8,6 +8,7 @@ from rest_framework.decorators import api_view, permission_classes
 from .models import Tour, Package, Booking
 from .serializers import TourSerializer, BookingSerializer, PackageSerializer
 from .payment import Paystack
+from rest_framework import filters
 
 class DetailBookingPermission(permissions.BasePermission):
     message = "you are not permitted to view this document"
@@ -108,3 +109,9 @@ class SubmitPayment(generics.UpdateAPIView):
             obj.paid == True
             obj.save()
         return Response(data.data)
+    
+class TourListView(generics.ListAPIView):
+    queryset = Tour.objects.all()
+    serializer_class = TourSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['$name', '^location']

@@ -6,21 +6,23 @@ from django.http import JsonResponse
 from .serializers import TourAgencySerializer, MyTokenObtainPairSerializer
 from rest_framework import generics, status
 from rest_framework_simplejwt.views import TokenObtainPairView
-from tours.models import Tour
+from tours.models import Tour, Agent
 from tours.serializers import TourSerializer
 from rest_framework.views import APIView
-from tours.serializers import TourSerializer
+from tours.serializers import TourSerializer, AgentSerializer
 from rest_framework.response import Response
 from django.http import Http404
+from rest_framework import filters
 
 # Create your views here.
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
     
+@permission_classes([permissions.IsAuthenticated])
+@permission_classes([permissions.IsAdminUser])    
 class RegisterTourAgency(generics.CreateAPIView):
     queryset = TourAgency.objects.all()
     serializer_class = TourAgencySerializer
-
 
 
 @api_view(["GET"])
@@ -42,7 +44,6 @@ def AgencyDetails(request, id):
 
 # Add Tour
 class AddTour(generics.CreateAPIView):
-    
     def post(self, request, format=None):
         serializer = TourSerializer(data=request.data)
         if serializer.is_valid():
@@ -88,4 +89,5 @@ class TourDetail(APIView):
         tours = self.get_object(pk)
         tours.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
+    
+    # Search for Tours, based on the names and location
