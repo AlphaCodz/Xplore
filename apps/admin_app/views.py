@@ -5,15 +5,19 @@ from rest_framework import generics, permissions
 from rest_framework.decorators import permission_classes, api_view, authentication_classes
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from tours.models import *
-from .serializers import AdminSerializer, ReasonSerializer, MyTokenObtainPairSerializer
+from .serializers import AdminSerializer, ReasonSerializer
 from tours.models import Customer, Booking
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
 from tours.models import Reason
 from .models import Admin
+from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
 
 
+# class ReadOnly(BasePermission):
+#     def has_permission(self, request, view):
+#         return request.method in SAFE_METHODS
 
 # Create your views here.
 class CustomerList(generics.ListAPIView):
@@ -79,10 +83,7 @@ class RegisterAdmin(generics.CreateAPIView):
     #permission_classes = (permissions.IsAdminUser,)
     serializer_class = AdminSerializer
         
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
-    
-    
+
 class AdminDetail(APIView):
     permission_classes= (permissions.IsAdminUser,)
     def get(self, request, format=None):

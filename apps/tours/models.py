@@ -3,6 +3,7 @@ from api.models import Customer
 from admin_app.models import Admin
 from djmoney.models.fields import MoneyField
 from touragency.models import TourAgency
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Tour(models.Model):
@@ -14,12 +15,18 @@ class Tour(models.Model):
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
     image = models.ImageField(upload_to="tours/%y/%m/%d/", null=True)
+    
+    def get_tour(self):
+        return f"Tour: {self.name}" 
+    
     def __str__(self):
         return self.name
 
 class Agent(models.Model):
     first_name = models.CharField(max_length=100, null=True) 
     last_name = models.CharField(max_length=100, null=True)
+    phone_number = PhoneNumberField(null=True)
+    address = models.CharField(max_length=200, null=True)
     profile_pic = models.ImageField(upload_to ="agents/profile_pic/", null=True)
     tour_agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
    
