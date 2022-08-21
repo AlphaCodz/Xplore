@@ -1,7 +1,7 @@
 from django.urls import path, re_path
 from .views import (
     TourList, tourPackageList, BookTour, 
-    BookingList, BookingDetail, SubmitPayment, TourListView
+    BookingList, BookingDetail, SubmitPayment, TourSearchList
     )
 
 urlpatterns = [
@@ -11,5 +11,5 @@ urlpatterns = [
     path('bookings', BookingList.as_view(), name='booking-list'),
     path('booking/<pk>/detail', BookingDetail.as_view(), name='booking-detail'),
     path('booking/<pk>/pay', SubmitPayment.as_view() , name="submit-payment"),
-    re_path(r'$', TourListView.as_view(), name="agents" )
+    re_path(r'$', TourSearchList.as_view(), name="agents" )
 ]

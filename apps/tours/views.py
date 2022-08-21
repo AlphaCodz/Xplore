@@ -110,7 +110,7 @@ class SubmitPayment(generics.UpdateAPIView):
             obj.save()
         return Response(data.data)
     
-class TourListView(generics.ListAPIView):
+class TourSearchList(generics.ListAPIView):
     queryset = Tour.objects.all()
     serializer_class = TourSerializer
     filter_backends = [filters.SearchFilter]
