@@ -11,5 +11,5 @@ urlpatterns = [
     path('bookings', BookingList.as_view(), name='booking-list'),
     path('booking/<pk>/detail', BookingDetail.as_view(), name='booking-detail'),
     path('booking/<pk>/pay', SubmitPayment.as_view() , name="submit-payment"),
-    re_path(r'$', TourSearchList.as_view(), name="agents" )
+    re_path(r'$', TourSearchList.as_view(), name="tour-search" )
 ]
