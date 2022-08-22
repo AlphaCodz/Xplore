@@ -116,17 +116,10 @@ def all_bookings(request, status):
     return JsonResponse(data)
 
 
-class status_update(generics.UpdateAPIView):
-    
-    def get_object(self, status):
-        try:
-            return Booking.objects.get(status=status)
-        except Booking.DoesNotExist:
-            return Http404
-        
-    def put(self, request, status, format=None):
-        status = self.get_object(status)
-        serializer = BookingSerializer(status, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-        
+@api_view(["PUT"])
+def approve_booking(request, pk):
+    booking = Booking.objects.get(id=pk)
+    booking.status = "A"
+    booking.save()
+    data = BookingSerializer(booking).data
+    return Response(data, 200)
