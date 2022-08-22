@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from .serializers import TourAgencySerializer, MyTokenObtainPairSerializer
 from rest_framework import generics, status
 from rest_framework_simplejwt.views import TokenObtainPairView
-from tours.models import Tour, Agent
+from tours.models import Tour, Agent, Booking
 from tours.serializers import TourSerializer
 from rest_framework.views import APIView
 from tours.serializers import TourSerializer, AgentSerializer
@@ -18,11 +18,19 @@ from rest_framework import filters
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
     
-@permission_classes([permissions.IsAuthenticated])
-@permission_classes([permissions.IsAdminUser])    
-class RegisterTourAgency(generics.CreateAPIView):
-    queryset = TourAgency.objects.all()
+    
+class RegisterTourAgency(generics.GenericAPIView):
     serializer_class = TourAgencySerializer
+    
+    def post(self, request):
+        agency = request.data
+        serializer = self.serializer_class(data=agency)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        agency_data = serializer.data
+        
+        return Response(agency_data, status=status.HTTP_201_CREATED)
+    
 
 
 @api_view(["GET"])
@@ -90,4 +98,18 @@ class TourDetail(APIView):
         tours.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-    # Search for Tours, based on the names and location
+@api_view(["GET"])
+def all_bookings(request, status):
+    qs = Booking.objects.filter(status=status)
+    bookings = []
+    for booking in qs:
+        json_form = {
+            "booking_id": booking.id,
+            "customer": str(booking.customer),
+            "Assigned Tour Agent": str(booking.agent),
+            "From": str(booking.agent.tour_agency)
+
+        }
+        bookings.append(json_form)
+    data = {status:bookings}
+    return JsonResponse(data)

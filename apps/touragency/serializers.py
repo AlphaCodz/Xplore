@@ -24,19 +24,21 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class TourAgencySerializer(serializers.ModelSerializer):
     class Meta:
         model = TourAgency
-        fields = ("name", "logo", "email", "address", "license", "cac")
+        fields = ("name", "profile_pic", "email", "address", "license", "cac")
         extra_kwargs = {
             "name" : {'required':True},
-            "agency_logo" : {'required':True},
-            "agency_email" : {'required':True},
+            "profile_pic" : {'required':False},
+            "email" : {'required':True},
             "address" : {'required':True},
-            "license" : {'required': True}
+            "license" : {'required': True},
+            "cac" : {'required':True}
         }
         
     def create(self, validated_data):
         Tour_Agency = TourAgency.objects.create(
             name = validated_data["name"],
             email = validated_data["email"],
+            profile_pic = validated_data["profile_pic"],
             address = validated_data["address"],
             license = validated_data["license"],
             cac = validated_data["cac"]

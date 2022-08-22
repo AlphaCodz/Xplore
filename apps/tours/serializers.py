@@ -1,10 +1,7 @@
-from dataclasses import fields
 from rest_framework import serializers
-from django.contrib.auth.password_validation import validate_password
 from .models import Tour, Booking, Package, Passport, Agent
 import re
 from django.contrib.auth.hashers import make_password
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenObtainSerializer
 
 class TourSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,7 +12,7 @@ class BookingSerializer(serializers.ModelSerializer):
     agent = serializers.StringRelatedField()
     tour = serializers.StringRelatedField()
     package = serializers.StringRelatedField()
-    passports = serializers.StringRelatedField(many=True)
+    passports = serializers.StringRelatedField(many=True)    
     class Meta:
         model = Booking
         fields = (
