@@ -6,8 +6,9 @@ from .views import RegisterTourAgency, TokenObtainPairView, AddTour, TourDetail,
 urlpatterns = [
     path('<int:id>', views.AgencyDetails, name='agencies'),
     path('reg/', RegisterTourAgency.as_view(), name="regtouragency"),
+    path('touragency/register', RegisterTourAgency.as_view(), name="regtouragency"),
     path('login/', TokenObtainPairView.as_view(), name="agencylogin"),
-    path('add/tour', AddTour.as_view(), name="addTour"),
+    path('add/tour', AddTour.as_view(), name="addtour"),
     path('tours/<int:pk>/', TourDetail.as_view(), name="tours" ),    
      path('all-bookings/<status>', views.all_bookings, name='all-bookings'),
 ]
