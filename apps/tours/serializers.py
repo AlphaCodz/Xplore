@@ -55,6 +55,11 @@ class BookingSerializer(serializers.ModelSerializer):
                 passport.save()
         return booking
     
+    def update(self, instance, validated_data):
+        instance.status = validated_data['status']
+        instance.save()
+        return instance
+    
 class PackageSerializer(serializers.ModelSerializer):
     agent = serializers.StringRelatedField()
     class Meta:

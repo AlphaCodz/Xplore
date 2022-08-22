@@ -1,3 +1,4 @@
+from math import perm
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
 from api.models import Customer
@@ -9,10 +10,10 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from tours.models import Tour, Agent, Booking
 from tours.serializers import TourSerializer
 from rest_framework.views import APIView
-from tours.serializers import TourSerializer, AgentSerializer
+from tours.serializers import TourSerializer, BookingSerializer
 from rest_framework.response import Response
 from django.http import Http404
-from rest_framework import filters
+from rest_framework import serializers
 
 # Create your views here.
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -113,3 +114,19 @@ def all_bookings(request, status):
         bookings.append(json_form)
     data = {status:bookings}
     return JsonResponse(data)
+
+
+class status_update(generics.UpdateAPIView):
+    
+    def get_object(self, status):
+        try:
+            return Booking.objects.get(status=status)
+        except Booking.DoesNotExist:
+            return Http404
+        
+    def put(self, request, status, format=None):
+        status = self.get_object(status)
+        serializer = BookingSerializer(status, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        
