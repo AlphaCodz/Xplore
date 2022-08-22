@@ -5,13 +5,12 @@ from .views import RegisterTourAgency, TokenObtainPairView, AddTour, TourDetail,
 
 urlpatterns = [
     path('<int:id>', views.AgencyDetails, name='agencies'),
-    path('reg/', RegisterTourAgency.as_view(), name="regtouragency"),
     path('touragency/register', RegisterTourAgency.as_view(), name="regtouragency"),
-    path('login/', TokenObtainPairView.as_view(), name="agencylogin"),
+    path('login', TokenObtainPairView.as_view(), name="agencylogin"),
     path('add/tour', AddTour.as_view(), name="addtour"),
-    path('tours/<int:pk>/', TourDetail.as_view(), name="tours" ),    
+    path('tours/<int:pk>', TourDetail.as_view(), name="tours" ),    
     path('all_bookings/<status>', views.all_bookings, name="bookings"),
-    path('update/<int:pk>', approve_booking, name="approve-booking"),
+    path('approve/<int:pk>', approve_booking, name="approve-booking"),
 ]
  
 urlpatterns = format_suffix_patterns(urlpatterns)
