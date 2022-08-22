@@ -71,7 +71,7 @@ class Booking(models.Model):
     )
     
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, related_name="customer")
-    agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
+    #agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
     package = models.ForeignKey(Package, on_delete=models.CASCADE)
     category = models.CharField(max_length=5, choices=CATEGORY_CHOICES)
