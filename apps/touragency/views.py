@@ -1,3 +1,4 @@
+from datetime import datetime
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
 from api.models import Customer
@@ -10,6 +11,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import Http404
 from .serializers import TourAgencySerializer
+import jwt
+from config.settings import SECRET_KEY
+from django.core.mail import send_mail
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import authentication_classes
+from rest_framework import authentication
 
 # Create your views here.   
 class RegisterTourAgency(generics.GenericAPIView):
@@ -111,3 +118,26 @@ def decline_booking(request, pk):
     booking.save()
     data = BookingSerializer(booking).data
     return Response(data, 200)
+
+@csrf_exempt
+@authentication_classes([authentication.TokenAuthentication])
+def GenerateToken(request):
+    agency = request.user
+    payload = {
+        "timestamp": str(datetime.now())
+    }
+    email = request.POST.get("email")
+    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+    host = request.get_host()
+    send_mail(
+            "Welcome",
+            f"welcome \n Click here to create your account http://{host}/api/verify_email/{token}",
+            "jenake8@gmail.com",
+            [email],
+            fail_silently=False,
+    ) 
+    return JsonResponse({"status":"Success"})
+
+
+    
+    

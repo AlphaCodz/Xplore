@@ -1,5 +1,6 @@
 from django.db import models
 from tours.models import Customer
+from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
 
@@ -11,9 +12,10 @@ class TourAgency(models.Model):
     email = models.EmailField(editable=True, unique= True, null=True)
     address = models.CharField(max_length=200, unique=True, editable=True, null=True)
     phone_number = models.BigIntegerField(unique=True, null=True)
-    license = models.ImageField(upload_to="media/tour_agency/license/")
-    cac = models.ImageField(upload_to="media/tour_agency/CAC/" )
-    # payment_info = models.IntegerField( unique=True, null=True)
+    license = models.ImageField(upload_to="tour_agency/license/")
+    cac = models.ImageField(upload_to="tour_agency/CAC/" )
+    password = models.CharField(max_length=20, null=True)
+    phone_number = PhoneNumberField(null=True)
     
     def get_agency(self):
         return f"Tour Agency: {self.name}"
