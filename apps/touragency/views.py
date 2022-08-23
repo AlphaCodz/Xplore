@@ -47,7 +47,7 @@ class AddTour(generics.CreateAPIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     # To view all the Tour Lists no matter the id
 class TourList(APIView):
@@ -90,7 +90,6 @@ def all_bookings(request, status):
             "id": booking.id,
             "customer": str(booking.customer),
             "agent": str(booking.agent),
-            "from": str(booking.agent.tour_agency)
         }
         bookings.append(json_form)
     data = {status:bookings}
@@ -101,6 +100,14 @@ def all_bookings(request, status):
 def approve_booking(request, pk):
     booking = Booking.objects.get(id=pk)
     booking.status = "A"
+    booking.save()
+    data = BookingSerializer(booking).data
+    return Response(data, 200)
+
+@api_view(["PUT"])
+def decline_booking(request, pk):
+    booking = Booking.objects.get(id=pk)
+    booking.status = "D"
     booking.save()
     data = BookingSerializer(booking).data
     return Response(data, 200)

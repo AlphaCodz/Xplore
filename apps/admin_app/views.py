@@ -67,8 +67,7 @@ def UserDetailsList(request, id):
         "first_name":details.customer.first_name,
         "last_name":details.customer.last_name,
         "email":details.customer.email,
-        "package_type":details.package.package_type,
-        "package_price": str(details.package.price),
+        "package":details.package,
         "number_of_person": details.individuals,
         "location": details.tour.location
         }

@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'admin_app',
     'touragency',
     
+    # simple invite
+    # 'drf_simple_invite',
 ]
 
 MIDDLEWARE = [
