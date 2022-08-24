@@ -35,6 +35,34 @@ class BookTour(generics.CreateAPIView):
     serializer_class = BookingSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
+def tourPackageList(request, id):
+    tour = Tour.objects.get(id=id)
+    packages = Package.objects.filter(tour=tour)
+    package_list = []
+
+    for package in packages:
+        package_json = {
+            "id": package.id,
+            "name": package.name,
+            "flight": package.flight,
+            "accomondation": package.accomondation,
+            "feeding": package.feeding,
+            "package_tour": package.package_tour,
+            "airport": package.airport,
+            "description": package.description,
+            "take_off_date": package.take_off_date,
+            "return_date": package.return_date,
+            "take_off_time": package.take_off_time,
+            "price": str(package.price),
+            "agent": package.agent.name,
+            "agent_logo": str(package.agent.logo),
+            "description": package.description,
+        }
+        package_list.append(package_json)
+
+    data = {"packages": package_list}
+    return JsonResponse(data)
+
 """class TourPackageList(generics.ListAPIView):
     serializer_class = PackageSerializer
     def get_queryset(self):

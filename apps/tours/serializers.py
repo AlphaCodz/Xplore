@@ -1,7 +1,5 @@
 from rest_framework import serializers
-from .models import Tour, Booking, Passport, Agent
-import re
-from django.contrib.auth.hashers import make_password
+from .models import Tour, Booking, Passport, Agent, Package
 
 class TourSerializer(serializers.ModelSerializer):
     class Meta:
@@ -58,6 +56,28 @@ class BookingSerializer(serializers.ModelSerializer):
         instance.status = validated_data['status']
         instance.save()
         return instance
+    
+    class PackageSerializer(serializers.ModelSerializer):
+        agent = serializers.StringRelatedField()
+        class Meta:
+            model = Package
+            fields = (
+                "id", 
+                "name", 
+                "flight", 
+                "accomondation", 
+                "feeding", 
+                "package_tour", 
+                "airport", 
+                "description",
+                "take_off_date",
+                "return_date",
+                "take_off_time",
+                "price",
+                "agent",
+                "description",
+                "price",
+                )
     
         
 class AgentSerializer(serializers.ModelSerializer):
