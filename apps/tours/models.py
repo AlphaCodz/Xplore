@@ -10,7 +10,6 @@ class Tour(models.Model):
     agency = models.ForeignKey(TourAgency, on_delete= models.CASCADE, null=True)
     name = models.CharField(max_length=100)
     description = models.TextField()
-    details = models.TextField()
     location = models.CharField(max_length=100, null=True)
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
@@ -28,33 +27,9 @@ class Agent(models.Model):
     phone_number = PhoneNumberField(null=True)
     address = models.CharField(max_length=200, null=True)
     profile_pic = models.ImageField(upload_to ="agents/profile_pic/", null=True)
-    tour_agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
    
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-
-class Package(models.Model):
-    TYPE_CHOICES = (
-        ("R", "Regular"),
-        ("V","VIP"),
-        ("VV","VVIP")
-    )
-    #tour_by_Agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
-    tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
-    name = models.CharField(max_length=20, null=True)
-    type = models.CharField(max_length=3, choices=TYPE_CHOICES, default="R", null=True)
-    flight = models.CharField(max_length=20, null=True)
-    accomondation = models.CharField(max_length=20, null=True)
-    feeding = models.CharField(max_length=20, null=True)
-    package_tour = models.CharField(max_length=20, null=True)
-    airport = models.CharField(max_length=20, null=True)
-    description = models.TextField(null=True, blank=True)
-    take_off_date = models.DateField(null=True)
-    return_date = models.DateField(null=True)
-    take_off_time = models.DateTimeField(null=True)
-    price = MoneyField(max_digits=19, decimal_places=4, default_currency="NGN", null=True)
-    def __str__(self):
-        return f"{self.name}"
 
 class Booking(models.Model):
     
@@ -71,18 +46,19 @@ class Booking(models.Model):
     )
     
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, related_name="customer")
-    #agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
-    package = models.ForeignKey(Package, on_delete=models.CASCADE)
     category = models.CharField(max_length=5, choices=CATEGORY_CHOICES)
     individuals = models.IntegerField(null=True, default = 1)
     paid = models.BooleanField(default=False)
-    package = models.ForeignKey(Package, related_name='packages', on_delete=models.CASCADE, null=True)
+    
+    # Package will be written as a list
+    package = models.TextField(blank=False, null=True)
     payment_reference = models.CharField(max_length=30, null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="P")
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     approved_by = models.ForeignKey(Admin, on_delete=models.PROTECT, null=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    
+    # Agent assigned will be chosen automatically
     agent = models.ForeignKey(Agent, on_delete=models.PROTECT, null=True)
     
     objects = models.Manager()

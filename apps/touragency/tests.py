@@ -8,7 +8,7 @@ class TourAgencyTest(TestCase):
     def setUp(self):
         TourAgency.objects.create(
             name= "TourSP Travels and Tours",
-            logo = "http://127.0.0.1:8000/media/media/tour_agency/license/16154101ac0c2fe5134722030b820030.jpg",
+            profile_pic = "http://127.0.0.1:8000/media/media/tour_agency/license/16154101ac0c2fe5134722030b820030.jpg",
             email = "testpy@gmail.com",
             address = "test stree Lagos country",
             phone_number = int("09052435027"),
@@ -18,7 +18,7 @@ class TourAgencyTest(TestCase):
     
     def test_tour_agency(self):
         agency_TourSP = TourAgency.objects.get(name="TourSP Travels and Tours")
-        agency_logo = TourAgency.objects.get(logo = "http://127.0.0.1:8000/media/media/tour_agency/license/16154101ac0c2fe5134722030b820030.jpg")
+        agency_logo = TourAgency.objects.get(profile_pic = "http://127.0.0.1:8000/media/media/tour_agency/license/16154101ac0c2fe5134722030b820030.jpg")
         self.assertEqual(
             agency_logo.get_agency(), "Tour Agency: TourSP Travels and Tours"
         )
@@ -33,7 +33,6 @@ class AddTourTest(TestCase):
         Tour.objects.create(
             name = "LASU Campus Tour",
             description = "LASU",
-            details="Invited Artist: Bella Shmurda, Anchored by: DJ Budu",
             location = "LASU",
             start_date = "2022-05-15",
             end_date = "2022-05-20",
@@ -42,16 +41,11 @@ class AddTourTest(TestCase):
     def test_add_tour(self):
         tour_name = Tour.objects.get(name="LASU Campus Tour")
         tour_description = Tour.objects.get(description= "LASU")
-        tour_details = Tour.objects.get(details="Invited Artist: Bella Shmurda, Anchored by: DJ Budu")
         self.assertEqual(
             tour_name.get_tour(), "Tour: LASU Campus Tour"
         )
         self.assertEqual(
             tour_description.get_tour(), "Tour: LASU Campus Tour"
-        )
-        
-        self.assertEqual(
-            tour_details.get_tour(), "Tour: LASU Campus Tour"
         )
         
         self.assertEqual(
