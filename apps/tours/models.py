@@ -1,9 +1,12 @@
+from sys import maxsize
 from django.db import models
 from api.models import Customer
 from admin_app.models import Admin
 from djmoney.models.fields import MoneyField
 from touragency.models import TourAgency
 from phonenumber_field.modelfields import PhoneNumberField
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
 
 
 class Tour(models.Model):
@@ -32,6 +35,21 @@ class Agent(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+class Rating(models.Model):
+    rating = models.IntegerField()
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return str(self.rating)
+    
+    class Meta:
+        indexes = [models.Index(fields = ["content_type", "object_id"])]
+
+
+
 class Package(models.Model):
     TYPE_CHOICES = (
         ("R", "Regular"),
@@ -52,6 +70,7 @@ class Package(models.Model):
     return_date = models.DateField(null=True)
     take_off_time = models.DateTimeField(null=True)
     price = MoneyField(max_digits=19, decimal_places=4, default_currency="NGN", null=True)
+    ratings = GenericRelation(Rating)
     def __str__(self):
         return f"{self.name}"
 
@@ -97,3 +116,17 @@ class Reason(models.Model):
      
     reason = models.CharField(max_length=50, choices= REASON_CHOICES, null=True)
     other_reasons = models.TextField(max_length=300, null=True)
+
+class TourRequest(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    destination = models.CharField(max_length=50)
+    category = models.CharField(max_length=50)
+    budget = MoneyField(max_digits=19, decimal_places=4, default_currency="NGN", null=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+class Activity(models.Model):
+    activity = models.TextField()
+    tour_request = models.ForeignKey(TourRequest, on_delete=models.CASCADE, related_name="activities")
+    def __str__(self):
+        return self.activity

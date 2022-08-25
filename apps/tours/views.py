@@ -1,15 +1,13 @@
-from urllib import response
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from requests import request
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from .models import Tour, Booking
-from .serializers import TourSerializer, BookingSerializer
+from .models import Activity, Tour, Booking, Package, Rating, TourRequest
+from .serializers import TourSerializer, BookingSerializer, TourRequestSerializer
 from .payment import Paystack
 from rest_framework import filters
-from .models import Package
+from django.views.decorators.csrf import csrf_exempt
 
 class DetailBookingPermission(permissions.BasePermission):
     message = "you are not permitted to view this document"
@@ -21,7 +19,8 @@ class MustBeCustomerBooking(permissions.BasePermission):
     def has_permission(self, request, view):
         pk = request.resolver_match.kwargs.get("pk")
         booking = get_object_or_404(Booking, pk=pk)
-        return request.user == booking.customer 
+        return request.user == booking.customer
+
 
 class TourList(generics.ListAPIView):
     queryset = Tour.objects.all()
@@ -42,6 +41,13 @@ def tourPackageList(request, id):
     package_list = []
 
     for package in packages:
+        rating = Rating.objects.filter(object_id= package.id)
+        rated_by = rating.count()
+        try:
+            total_rating = sum([i.rating for i in rating]) 
+            average_rating = round(total_rating/rated_by, 1)
+        except ZeroDivisionError:
+            average_rating = None
         package_json = {
             "id": package.id,
             "name": package.name,
@@ -55,9 +61,11 @@ def tourPackageList(request, id):
             "return_date": package.return_date,
             "take_off_time": package.take_off_time,
             "price": str(package.price),
-            "agent": package.agent.name,
-            "agent_logo": str(package.agent.logo),
+            #"agent": package.agent.name,
+            #"agent_logo": str(package.agent.logo),
             "description": package.description,
+            "rating": average_rating,
+            "rated_by": rated_by,
         }
         package_list.append(package_json)
 
@@ -116,3 +124,36 @@ class TourSearchList(generics.ListAPIView):
     serializer_class = TourSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['$name', '^location']
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated,])
+def rate_package(request):
+    if request.POST["rating"] not in ("0","1","3","4","5"):
+        return JsonResponse({
+            "error": "invalid rating",
+        }, status=400)
+    old_rating = Rating.objects.filter(customer=request.user)
+    if old_rating:
+        rating = old_rating[0]
+        rating.rating = request.POST["rating"]
+    else:
+        rating = Rating.objects.create(
+            rating = request.POST["rating"],
+            content_object = package,
+            customer = request.user,
+            )
+    package = Package.objects.get(id=request.POST["package_id"])
+    rating.save()
+    data = {
+        "id": rating.id,
+        "rating":rating.rating,
+        "package": str(package),
+        "customer_id": request.user.id,
+    }
+    return JsonResponse(data)
+
+class RequestTour(generics.CreateAPIView):
+    serializer_class = TourRequestSerializer
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = TourRequest.objects.all().prefetch_related("activity")

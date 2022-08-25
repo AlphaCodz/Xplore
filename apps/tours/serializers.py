@@ -1,5 +1,7 @@
+from urllib import request
 from rest_framework import serializers
-from .models import Tour, Booking, Passport, Agent, Package
+from .models import Activity, Tour, Booking, Passport, Agent, Package, TourRequest
+from djmoney.money import Money
 
 class TourSerializer(serializers.ModelSerializer):
     class Meta:
@@ -93,3 +95,29 @@ class AgentSerializer(serializers.ModelSerializer):
             "tour_agency"
                 )
 
+class TourRequestSerializer(serializers.ModelSerializer):
+    activities = serializers.StringRelatedField(many=True)
+    class Meta:
+        model = TourRequest
+        fields = ("destination", "category", "budget", "start_date", "end_date", "activities",)
+    
+    def create(self, validated_data):
+        expected_activities = ["activity1", "activity2", "activity3"]
+        tour_request = TourRequest.objects.create(
+            customer = self.context["request"].user,
+            destination= validated_data["destination"],
+            category = validated_data["category"],
+            budget = Money(validated_data["budget"], "NGN"),
+            start_date = validated_data["start_date"],
+            end_date = validated_data["end_date"],
+        )
+        tour_request.save()
+        for i in expected_activities:
+            field = self.context["request"].POST.get(i)
+            if field:
+                activity = Activity.objects.create(
+                    activity = field,
+                    tour_request = tour_request
+                )
+                activity.save()
+        return tour_request
