@@ -25,12 +25,13 @@ class Tour(models.Model):
         return self.name
 
 class Agent(models.Model):
+    agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=100, null=True) 
     last_name = models.CharField(max_length=100, null=True)
     phone_number = PhoneNumberField(null=True)
     address = models.CharField(max_length=200, null=True)
     profile_pic = models.ImageField(upload_to ="agents/profile_pic/", null=True)
-    tour_agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
+    
    
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -71,6 +72,7 @@ class Package(models.Model):
     take_off_time = models.DateTimeField(null=True)
     price = MoneyField(max_digits=19, decimal_places=4, default_currency="NGN", null=True)
     ratings = GenericRelation(Rating)
+    agent = models.OneToOneField(Agent, on_delete=models.PROTECT, null=True)
     def __str__(self):
         return f"{self.name}"
 

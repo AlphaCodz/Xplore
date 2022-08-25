@@ -1,11 +1,10 @@
 from datetime import datetime
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework import permissions
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from api.models import Customer
 from .models import TourAgency
 from django.http import JsonResponse
-from rest_framework import generics, status
-from tours.models import Tour, Booking
+from rest_framework import generics, status, authentication, permissions
+from tours.models import Tour, Booking, Agent
 from tours.serializers import TourSerializer, BookingSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -15,8 +14,6 @@ import jwt
 from config.settings import SECRET_KEY
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import authentication_classes
-from rest_framework import authentication
 
 # Create your views here.   
 class RegisterTourAgency(generics.GenericAPIView):
@@ -49,12 +46,14 @@ def AgencyDetails(request, id):
 
 # Add Tour
 class AddTour(generics.CreateAPIView):
+    
     def post(self, request, format=None):
         serializer = TourSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+           
     
     # To view all the Tour Lists no matter the id
 class TourList(APIView):
@@ -138,6 +137,17 @@ def GenerateToken(request):
     ) 
     return JsonResponse({"status":"Success"})
 
+@api_view(["GET"])
+def Agents(request, pk):
+    agency = TourAgency.objects.get(id=pk)
+    details = Agent.objects.filter(tour_agency=agency)
+    detail_list = []
+    for details in details:
+        query = {
+            "id": details.first_name
+        }
+        detail_list.append(query)
+    context_data = {"detail_list":detail_list}     
+    return JsonResponse(context_data)
 
-    
-    
+        

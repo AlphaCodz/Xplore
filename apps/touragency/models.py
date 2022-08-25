@@ -17,6 +17,7 @@ class TourAgency(models.Model):
     password = models.CharField(max_length=20, null=True)
     phone_number = PhoneNumberField(null=True)
     
+    
     def get_agency(self):
         return f"Tour Agency: {self.name}"
     

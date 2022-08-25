@@ -6,7 +6,7 @@ from djmoney.money import Money
 class TourSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tour
-        fields = ("id", "agency" ,"name", "description", "details", "location", "start_date", "end_date", "image")
+        fields = ("id", "agency" ,"name", "description", "location", "start_date", "end_date", "image")
 
 class BookingSerializer(serializers.ModelSerializer):
     agent = serializers.StringRelatedField()
