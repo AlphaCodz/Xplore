@@ -1,11 +1,10 @@
-from email import message
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from .models import Tour, Booking, Package, Rating
-from .serializers import TourSerializer, BookingSerializer
+from .models import Activity, Tour, Booking, Package, Rating, TourRequest
+from .serializers import TourSerializer, BookingSerializer, TourRequestSerializer
 from .payment import Paystack
 from rest_framework import filters
 from django.views.decorators.csrf import csrf_exempt
@@ -153,3 +152,8 @@ def rate_package(request):
         "customer_id": request.user.id,
     }
     return JsonResponse(data)
+
+class RequestTour(generics.CreateAPIView):
+    serializer_class = TourRequestSerializer
+    permission_classes = [permissions.IsAuthenticated,]
+    queryset = TourRequest.objects.all().prefetch_related("activity")

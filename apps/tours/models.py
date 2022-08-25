@@ -116,3 +116,17 @@ class Reason(models.Model):
      
     reason = models.CharField(max_length=50, choices= REASON_CHOICES, null=True)
     other_reasons = models.TextField(max_length=300, null=True)
+
+class TourRequest(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    destination = models.CharField(max_length=50)
+    category = models.CharField(max_length=50)
+    budget = MoneyField(max_digits=19, decimal_places=4, default_currency="NGN", null=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+class Activity(models.Model):
+    activity = models.TextField()
+    tour_request = models.ForeignKey(TourRequest, on_delete=models.CASCADE, related_name="activities")
+    def __str__(self):
+        return self.activity
