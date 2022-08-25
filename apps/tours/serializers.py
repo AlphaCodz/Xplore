@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Tour, Booking, Passport, Agent, Package
+from .models import Tour, Booking, Passport, Agent, Package, Rating
 
 class TourSerializer(serializers.ModelSerializer):
     class Meta:
@@ -92,4 +92,3 @@ class AgentSerializer(serializers.ModelSerializer):
             "profile_pic",
             "tour_agency"
                 )
-
