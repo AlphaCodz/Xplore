@@ -9,6 +9,7 @@ from .models import Tour, Booking
 from .serializers import TourSerializer, BookingSerializer
 from .payment import Paystack
 from rest_framework import filters
+from .models import Package
 
 class DetailBookingPermission(permissions.BasePermission):
     message = "you are not permitted to view this document"
