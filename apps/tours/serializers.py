@@ -2,6 +2,10 @@ from urllib import request
 from rest_framework import serializers
 from .models import Activity, Tour, Booking, Passport, Agent, Package, TourRequest
 from djmoney.money import Money
+from rest_framework.validators import UniqueValidator
+from django.contrib.auth.password_validation import validate_password
+from tours.models import Customer
+import re
 
 class TourSerializer(serializers.ModelSerializer):
     class Meta:
@@ -80,21 +84,7 @@ class BookingSerializer(serializers.ModelSerializer):
                 "description",
                 "price",
                 )
-    
         
-class AgentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Agent
-        fields = (
-            "id",
-            "first_name",
-            "last_name",
-            "phone_number",
-            "address",
-            "profile_pic",
-            "tour_agency"
-                )
-
 class TourRequestSerializer(serializers.ModelSerializer):
     activities = serializers.StringRelatedField(many=True)
     class Meta:
@@ -121,3 +111,51 @@ class TourRequestSerializer(serializers.ModelSerializer):
                 )
                 activity.save()
         return tour_request
+
+class AgentSerializer(serializers.ModelSerializer):  
+    email = serializers.EmailField(
+        required = True,
+        validators = [UniqueValidator(queryset= Agent.objects.all())]
+    )
+    password = serializers.CharField(write_only=True, required=True, validators =[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
+    class Meta:
+        model = Agent
+        fields = ("first_name", "last_name", "email", "phone_number","address", "profile_pic", "tour_agency", "password", "password2")
+        extra_kwargs = {
+            "first_name":{'required':True},
+            "last_name":{'required':True},
+            "email":{'required':True},
+            "address":{'required':True},
+            "tour_agency": {'required':True},
+            "phone_number": {'required':True}            
+        }
+    def validate(self, attrs):
+        pattern = "[^a-z A-Z 0-9]"
+        if attrs['password'] != attrs['password2']:
+            return "Password Does Not Match!"
+        if attrs["password"].islower():
+            raise serializers.ValidationError({"password": "Password fields must contain upper and lowercase"})
+        if not re.findall(pattern, attrs["password"]):
+            raise serializers.ValidationError({"password": "password must contain special character"})
+        return attrs
+    
+    def create(self, validated_data):
+        customer = Customer.objects.create(
+            email = validated_data['email']
+        )
+        customer.set_password(raw_password=validated_data['password'])
+        customer.save()
+        
+        Agents = Agent.objects.create(
+            first_name=validated_data["first_name"],
+            last_name = validated_data["password"],
+            email = validated_data["email"],
+            phone_number = validated_data["phone_number"],
+            address = validated_data["address"],
+            profile_pic = validated_data["profile_pic"],
+            tour_agency = validated_data["tour_agency"]
+        )
+        Agents.save()
+        return Agents
+        
