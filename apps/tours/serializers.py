@@ -1,7 +1,8 @@
-from urllib import request
 from rest_framework import serializers
 from .models import Activity, Tour, Booking, Passport, Agent, Package, TourRequest
 from djmoney.money import Money
+import jwt
+from config.settings import SECRET_KEY
 
 class TourSerializer(serializers.ModelSerializer):
     class Meta:
@@ -94,6 +95,29 @@ class AgentSerializer(serializers.ModelSerializer):
             "profile_pic",
             "tour_agency"
                 )
+        extra_kwargs = {
+            "first_name": {"required": True},
+            "last_name": {"required": True},
+        }
+    def validate(self, attrs):
+        token = self.context["request"].parser_context["kwargs"]["token"]
+        self.token = token
+        try:
+            decoded_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        except:
+            raise serializers.ValidationError({"token":"invalid token"})
+    
+        return attrs
+    
+    def create(self, validated_data):
+        agent = Agent.objects.create(
+            first_name= validated_data["first_name"],
+            last_name = validated_data["last_name"],
+            phone_number = validated_data.get("phone_number"),
+            address = validated_data.get("address"),
+            profile_pic = validated_data.get("profile_pic"),
+        )
+        return agent
 
 class TourRequestSerializer(serializers.ModelSerializer):
     activities = serializers.StringRelatedField(many=True)

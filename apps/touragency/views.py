@@ -1,6 +1,7 @@
 from datetime import datetime
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from api.models import Customer
+from tours.serializers import AgentSerializer
 from .models import TourAgency
 from django.http import JsonResponse
 from rest_framework import generics, status, authentication, permissions
@@ -121,9 +122,11 @@ def decline_booking(request, pk):
 @csrf_exempt
 @authentication_classes([authentication.TokenAuthentication])
 def GenerateToken(request):
-    agency = request.user
+    user = request.user
+    #add agency email to payload
     payload = {
-        "timestamp": str(datetime.now())
+        "timestamp": str(datetime.now()),
+        "email": user.email,
     }
     email = request.POST.get("email")
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
@@ -150,4 +153,5 @@ def Agents(request, pk):
     context_data = {"detail_list":detail_list}     
     return JsonResponse(context_data)
 
-        
+class RegisterAgent(generics.CreateAPIView):
+    serializer_class = AgentSerializer

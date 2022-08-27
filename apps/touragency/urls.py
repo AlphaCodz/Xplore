@@ -12,7 +12,8 @@ urlpatterns = [
     path('approve/<int:pk>', views.approve_booking, name="approve-booking"),
     path('decline/<int:pk>', views.decline_booking, name="decline-booking"),
     path('generate/token', views.GenerateToken, name="token"),
-    path('agent/<pk>', views.Agents, name="agent")
+    path('agent/<pk>', views.Agents, name="agent"),
+    path('agent/register/<token>', views.RegisterAgent.as_view(), name='register-agent'),
     
 ]
  
