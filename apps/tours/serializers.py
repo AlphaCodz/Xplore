@@ -1,8 +1,11 @@
+import email
 from rest_framework import serializers
+from touragency.models import TourAgency
 from .models import Activity, Tour, Booking, Passport, Agent, Package, TourRequest
 from djmoney.money import Money
 import jwt
 from config.settings import SECRET_KEY
+from datetime import datetime, timedelta
 
 class TourSerializer(serializers.ModelSerializer):
     class Meta:
@@ -84,6 +87,7 @@ class BookingSerializer(serializers.ModelSerializer):
     
         
 class AgentSerializer(serializers.ModelSerializer):
+    tour_agency = serializers.StringRelatedField()
     class Meta:
         model = Agent
         fields = (
@@ -101,21 +105,32 @@ class AgentSerializer(serializers.ModelSerializer):
         }
     def validate(self, attrs):
         token = self.context["request"].parser_context["kwargs"]["token"]
-        self.token = token
+        #check if token is valid
         try:
             decoded_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            self.decoded_token = decoded_token
         except:
             raise serializers.ValidationError({"token":"invalid token"})
-    
+        #check if token is expired
+        time_stamp = decoded_token["timestamp"]
+        #convert timestamp from string to datetime object
+        time_stamp = datetime.strptime(time_stamp, '%Y-%m-%d %H:%M:%S.%f')
+        time_stamp += timedelta(minutes=5)
+        if time_stamp > datetime.now():
+            raise serializers.ValidationError({"token":"expired token"})
+
         return attrs
     
     def create(self, validated_data):
+        print(self.decoded_token)
+        agency = TourAgency.objects.get(email=self.decoded_token["agency_email"])
         agent = Agent.objects.create(
             first_name= validated_data["first_name"],
             last_name = validated_data["last_name"],
             phone_number = validated_data.get("phone_number"),
             address = validated_data.get("address"),
             profile_pic = validated_data.get("profile_pic"),
+            tour_agency = agency,
         )
         return agent
 

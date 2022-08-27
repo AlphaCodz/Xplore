@@ -120,20 +120,22 @@ def decline_booking(request, pk):
     return Response(data, 200)
 
 @csrf_exempt
-@authentication_classes([authentication.TokenAuthentication])
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated])
 def GenerateToken(request):
     user = request.user
-    #add agency email to payload
+    #add the invitee and invited's email to payload
     payload = {
         "timestamp": str(datetime.now()),
-        "email": user.email,
+        "agency_email": user.email,
+        "agent_email": request.POST.get("email"),
     }
     email = request.POST.get("email")
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
     host = request.get_host()
     send_mail(
             "Welcome",
-            f"welcome \n Click here to create your account http://{host}/api/verify_email/{token}",
+            f"welcome \n Click here to create your account http://{host}/api/agency/agent/register/{token}",
             "jenake8@gmail.com",
             [email],
             fail_silently=False,
