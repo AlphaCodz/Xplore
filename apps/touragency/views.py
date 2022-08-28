@@ -1,11 +1,13 @@
 from datetime import datetime
+from tkinter import Pack
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from api.models import Customer
+from tours.serializers import AgentSerializer, PackageSerializer
 from .models import TourAgency
 from django.http import JsonResponse
 from rest_framework import generics, status, authentication, permissions
 from tours.models import Tour, Booking, Agent
-from tours.serializers import TourSerializer, BookingSerializer, AgentSerializer
+from tours.serializers import TourSerializer, BookingSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import Http404
@@ -119,18 +121,23 @@ def decline_booking(request, pk):
     return Response(data, 200)
 
 @csrf_exempt
-@authentication_classes([authentication.TokenAuthentication])
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated])
 def GenerateToken(request):
-    agency = request.user
+    user = request.user
+    #add the invitee and invited's email to payload
     payload = {
-        "timestamp": str(datetime.now())
+        "timestamp": str(datetime.now()),
+        "agency_email": user.email,
+        "agent_email": request.POST.get("email"),
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=86400)
     }
     email = request.POST.get("email")
     token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
     host = request.get_host()
     send_mail(
             "Welcome",
-            f"welcome \n Click here to create your account http://{host}/api/verify_email/{token}",
+            f"welcome \n Click here to create your account http://{host}/api/agency/agent/register/{token}",
             "jenake8@gmail.com",
             [email],
             fail_silently=False,
@@ -147,19 +154,15 @@ def Agents(request, pk):
             "id": details.id,
             "first_name": details.first_name,
             "last_name": details.last_name,
-            "agency": str(details.tour_agency),
-            "image": str(details.profile_pic)
+            "agency": details.tour_agency
         }
         detail_list.append(query)
     context_data = {"detail_list":detail_list}     
     return JsonResponse(context_data)
 
 class RegisterAgent(generics.CreateAPIView):
+    serializer_class = AgentSerializer
     
-    def post(self, request, format=None):
-        serializer = AgentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+class Package(generics.CreateAPIView):
+    serializer_class = PackageSerializer
+    

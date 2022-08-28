@@ -2,7 +2,7 @@ from django.urls import path, re_path
 from . import views
 from rest_framework.urlpatterns import format_suffix_patterns
 from .views import (RegisterTourAgency, AddTour, TourDetail, approve_booking, 
-                    decline_booking, GenerateToken, Agents, RegisterAgent)
+                    decline_booking, GenerateToken, Agents, RegisterAgent, Package)
 
 urlpatterns = [
     path('<int:id>', views.AgencyDetails, name='agencies'),
@@ -14,7 +14,8 @@ urlpatterns = [
     path('decline/<int:pk>', views.decline_booking, name="decline-booking"),
     path('generate/token', views.GenerateToken, name="token"),
     path('agent/<pk>', views.Agents, name="agent"),
-    path('agents/register', RegisterAgent.as_view(), name="reg_Agent")
+    path('agents/register', RegisterAgent.as_view(), name="reg_Agent"),
+    path('tour/package', Package.as_view(), name="")
     
 ]
  

@@ -1,11 +1,13 @@
-from urllib import request
+import email
 from rest_framework import serializers
+from touragency.models import TourAgency
 from .models import Activity, Tour, Booking, Passport, Agent, Package, TourRequest
 from djmoney.money import Money
-from rest_framework.validators import UniqueValidator
-from django.contrib.auth.password_validation import validate_password
-from tours.models import Customer
-import re
+import jwt
+from config.settings import SECRET_KEY
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+
 
 class TourSerializer(serializers.ModelSerializer):
     class Meta:
@@ -63,28 +65,99 @@ class BookingSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
     
-    class PackageSerializer(serializers.ModelSerializer):
-        agent = serializers.StringRelatedField()
-        class Meta:
-            model = Package
-            fields = (
-                "id", 
-                "name", 
-                "flight", 
-                "accomondation", 
-                "feeding", 
-                "package_tour", 
-                "airport", 
-                "description",
-                "take_off_date",
-                "return_date",
-                "take_off_time",
-                "price",
-                "agent",
-                "description",
-                "price",
-                )
+class PackageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Package
+        fields = (
+            "id", 
+            "name", 
+            "flight", 
+            "accomodation", 
+            "feeding", 
+            "airport", 
+            "description",
+            "take_off_date",
+            "return_date",
+            "take_off_time",
+            "price"
+)
+    
+    def validate(self, attrs):
+        # Convert take off datetime object to str
+        take_off_date = "{}".format(attrs["take_off_date"])
+        take_off_date = datetime.strptime(take_off_date, '%Y-%m-%d')
         
+        # Add 5 days to creation days
+        Five_Days_time = datetime.today() + relativedelta(days=2)
+        
+        if take_off_date < Five_Days_time:
+            raise serializers.ValidationError({"take_off_date error": "Tours dates must be set to at least 2 days after creation time"})
+        return attrs
+        
+    def create(self, validated_data):
+        packages = Package.objects.create(
+            name = validated_data["name"],
+            flight = validated_data["flight"],
+            accomodation = validated_data["accomodation"],
+            feeding = validated_data["feeding"],
+            airport = validated_data["airport"],
+            description = validated_data["description"],
+            take_off_date = validated_data["take_off_date"],
+            return_date = validated_data["return_date"],
+            take_off_time = validated_data["take_off_time"],
+            price = validated_data["price"],
+            )
+        packages.save()
+        return packages
+        
+class AgentSerializer(serializers.ModelSerializer):
+    tour_agency = serializers.StringRelatedField()
+    class Meta:
+        model = Agent
+        fields = (
+            "id",
+            "first_name",
+            "last_name",
+            "phone_number",
+            "address",
+            "profile_pic",
+            "tour_agency"
+                )
+        extra_kwargs = {
+            "first_name": {"required": True},
+            "last_name": {"required": True},
+        }
+    def validate(self, attrs):
+        token = self.context["request"].parser_context["kwargs"]["token"]
+        #check if token is valid
+        try:
+            decoded_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            self.decoded_token = decoded_token
+        except:
+            raise serializers.ValidationError({"token":"invalid token"})
+        #check if token is expired
+        time_stamp = decoded_token["timestamp"]
+        
+        #convert timestamp from string to datetime object
+        time_stamp = datetime.strptime(time_stamp, '%Y-%m-%d %H:%M:%S.%f')
+        time_stamp += timedelta(minutes=5)
+        if time_stamp > datetime.now():
+            raise serializers.ValidationError({"token":"expired token"})
+        return attrs
+    
+    def create(self, validated_data):
+        print(self.decoded_token)
+        agency = TourAgency.objects.get(email=self.decoded_token["agency_email"])
+        agent = Agent.objects.create(
+            first_name= validated_data["first_name"],
+            last_name = validated_data["last_name"],
+            phone_number = validated_data.get("phone_number"),
+            address = validated_data.get("address"),
+            profile_pic = validated_data.get("profile_pic"),
+            tour_agency = agency,
+        )
+        return agent
+
 class TourRequestSerializer(serializers.ModelSerializer):
     activities = serializers.StringRelatedField(many=True)
     class Meta:
@@ -111,51 +184,3 @@ class TourRequestSerializer(serializers.ModelSerializer):
                 )
                 activity.save()
         return tour_request
-
-class AgentSerializer(serializers.ModelSerializer):  
-    email = serializers.EmailField(
-        required = True,
-        validators = [UniqueValidator(queryset= Agent.objects.all())]
-    )
-    password = serializers.CharField(write_only=True, required=True, validators =[validate_password])
-    password2 = serializers.CharField(write_only=True, required=True)
-    class Meta:
-        model = Agent
-        fields = ("first_name", "last_name", "email", "phone_number","address", "profile_pic", "tour_agency", "password", "password2")
-        extra_kwargs = {
-            "first_name":{'required':True},
-            "last_name":{'required':True},
-            "email":{'required':True},
-            "address":{'required':True},
-            "tour_agency": {'required':True},
-            "phone_number": {'required':True}            
-        }
-    def validate(self, attrs):
-        pattern = "[^a-z A-Z 0-9]"
-        if attrs['password'] != attrs['password2']:
-            return "Password Does Not Match!"
-        if attrs["password"].islower():
-            raise serializers.ValidationError({"password": "Password fields must contain upper and lowercase"})
-        if not re.findall(pattern, attrs["password"]):
-            raise serializers.ValidationError({"password": "password must contain special character"})
-        return attrs
-    
-    def create(self, validated_data):
-        customer = Customer.objects.create(
-            email = validated_data['email']
-        )
-        customer.set_password(raw_password=validated_data['password'])
-        customer.save()
-        
-        Agents = Agent.objects.create(
-            first_name=validated_data["first_name"],
-            last_name = validated_data["password"],
-            email = validated_data["email"],
-            phone_number = validated_data["phone_number"],
-            address = validated_data["address"],
-            profile_pic = validated_data["profile_pic"],
-            tour_agency = validated_data["tour_agency"]
-        )
-        Agents.save()
-        return Agents
-        

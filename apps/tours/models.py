@@ -27,11 +27,12 @@ class Tour(models.Model):
 class Agent(models.Model):
     tour_agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=100, null=True) 
+    email = models.EmailField(null=True)
     last_name = models.CharField(max_length=100, null=True)
     phone_number = PhoneNumberField(null=True)
     address = models.CharField(max_length=200, null=True)
     profile_pic = models.ImageField(upload_to ="agents/profile_pic/", null=True)
-    
+    password = models.CharField(max_length=20, null=True)
    
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -58,13 +59,12 @@ class Package(models.Model):
         ("VV","VVIP")
     )
     #tour_by_Agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
-    tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
+    tour = models.ForeignKey(Tour, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=20, null=True)
     type = models.CharField(max_length=3, choices=TYPE_CHOICES, default="R", null=True)
     flight = models.CharField(max_length=20, null=True)
-    accomondation = models.CharField(max_length=20, null=True)
+    accomodation = models.CharField(max_length=20, null=True)
     feeding = models.CharField(max_length=20, null=True)
-    package_tour = models.CharField(max_length=20, null=True)
     airport = models.CharField(max_length=20, null=True)
     description = models.TextField(null=True, blank=True)
     take_off_date = models.DateField(null=True)
