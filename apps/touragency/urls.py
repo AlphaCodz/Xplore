@@ -15,7 +15,7 @@ urlpatterns = [
     path('generate/token', views.GenerateToken, name="token"),
     path('agent/<pk>', views.Agents, name="agent"),
     path('agents/register', RegisterAgent.as_view(), name="reg_Agent"),
-    path('tour/package', Package.as_view(), name="")
+    path('tour/package', Package.as_view(), name="package")
     
 ]
  

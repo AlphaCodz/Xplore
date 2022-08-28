@@ -86,7 +86,6 @@ class PackageSerializer(serializers.ModelSerializer):
         # Convert take off datetime object to str
         take_off_date = "{}".format(attrs["take_off_date"])
         take_off_date = datetime.strptime(take_off_date, '%Y-%m-%d')
-        
         # Add 5 days to creation days
         Five_Days_time = datetime.today() + relativedelta(days=2)
         

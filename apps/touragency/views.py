@@ -1,5 +1,6 @@
 from datetime import datetime
 from tkinter import Pack
+from urllib import request
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from api.models import Customer
 from tours.serializers import AgentSerializer, PackageSerializer
@@ -165,4 +166,6 @@ class RegisterAgent(generics.CreateAPIView):
     
 class Package(generics.CreateAPIView):
     serializer_class = PackageSerializer
+    
+    
     
