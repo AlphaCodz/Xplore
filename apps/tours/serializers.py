@@ -1,4 +1,4 @@
-import email
+from tracemalloc import start
 from rest_framework import serializers
 from touragency.models import TourAgency
 from .models import Activity, Tour, Booking, Passport, Agent, Package, TourRequest
@@ -12,8 +12,41 @@ from dateutil.relativedelta import relativedelta
 class TourSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tour
-        fields = ("id", "agency" ,"name", "description", "location", "start_date", "end_date", "image")
-
+        fields = ("id", "name", "agency" , "description", "location", "start_date", "end_date", "image")
+    
+    def validate(self, attrs):
+        
+        # Convert dt to string
+        starting_date = "{}".format(attrs["start_date"])
+        end_date = "{}".format(attrs["end_date"])
+        
+        # Specify the format of dt display
+        starting_date = datetime.strptime(starting_date, '%Y-%m-%d')
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
+        
+        two_days_time = datetime.today() + relativedelta(days=2)
+        
+        if starting_date < two_days_time:
+            raise serializers.ValidationError({"date error": "Tours dates must be set to at least 2 days after creation time"})
+        if end_date < two_days_time:
+            raise serializers.ValidationError({"date error": "Tours dates must be set to at least 2 days after creation time"})
+        if attrs["name"].islower():
+            raise serializers.ValidationError({"name case error": "Tour name fields must contain uppercase and lowercase characters"})
+        return attrs  
+    
+    def create(self, validated_data):
+        tour = Tour.objects.create(
+            agency = validated_data["agency"],
+            name = validated_data["name"],
+            description = validated_data["description"],
+            location = validated_data["location"],
+            start_date = validated_data["start_date"],
+            end_date = validated_data["end_date"],
+            image = validated_data["image"]
+        )
+        tour.save()
+        return tour
+    
 class BookingSerializer(serializers.ModelSerializer):
     agent = serializers.StringRelatedField()
     tour = serializers.StringRelatedField()

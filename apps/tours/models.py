@@ -11,8 +11,8 @@ from django.contrib.contenttypes.models import ContentType
 
 class Tour(models.Model):
     agency = models.ForeignKey(TourAgency, on_delete= models.CASCADE, null=True)
-    name = models.CharField(max_length=100)
-    description = models.TextField()
+    name = models.CharField(max_length=100, null=True)
+    description = models.TextField(null=True)
     location = models.CharField(max_length=100, null=True)
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
@@ -58,7 +58,7 @@ class Package(models.Model):
         ("V","VIP"),
         ("VV","VVIP")
     )
-    tour = models.ForeignKey(Tour, on_delete=models.CASCADE, null=True)
+    tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, null=True)
     type = models.CharField(max_length=3, choices=TYPE_CHOICES, default="R", null=True)
     flight = models.CharField(max_length=20, null=True)

@@ -1,6 +1,4 @@
 from datetime import datetime
-from tkinter import Pack
-from urllib import request
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from api.models import Customer
 from tours.serializers import AgentSerializer, PackageSerializer
@@ -49,13 +47,7 @@ def AgencyDetails(request, id):
 
 # Add Tour
 class AddTour(generics.CreateAPIView):
-    
-    def post(self, request, format=None):
-        serializer = TourSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer_class = TourSerializer
            
     
     # To view all the Tour Lists no matter the id
@@ -126,7 +118,7 @@ def decline_booking(request, pk):
 @permission_classes([permissions.IsAuthenticated])
 def GenerateToken(request):
     user = request.user
-    #add the invitee and invited's email to payload
+    # add the invitee and invited's email to payload
     payload = {
         "timestamp": str(datetime.now()),
         "agency_email": user.email,
