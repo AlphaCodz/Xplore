@@ -70,6 +70,7 @@ class PackageSerializer(serializers.ModelSerializer):
         model = Package
         fields = (
             "id", 
+            "tour",
             "name", 
             "flight", 
             "accomodation", 
@@ -86,15 +87,17 @@ class PackageSerializer(serializers.ModelSerializer):
         # Convert take off datetime object to str
         take_off_date = "{}".format(attrs["take_off_date"])
         take_off_date = datetime.strptime(take_off_date, '%Y-%m-%d')
-        # Add 5 days to creation days
-        Five_Days_time = datetime.today() + relativedelta(days=2)
         
-        if take_off_date < Five_Days_time:
+        # Add 5 days to creation days
+        two_days_time = datetime.today() + relativedelta(days=2)
+        
+        if take_off_date < two_days_time:
             raise serializers.ValidationError({"take_off_date error": "Tours dates must be set to at least 2 days after creation time"})
         return attrs
         
     def create(self, validated_data):
         packages = Package.objects.create(
+            tour = validated_data["tour"],
             name = validated_data["name"],
             flight = validated_data["flight"],
             accomodation = validated_data["accomodation"],

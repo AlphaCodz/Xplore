@@ -7,7 +7,7 @@ from tours.serializers import AgentSerializer, PackageSerializer
 from .models import TourAgency
 from django.http import JsonResponse
 from rest_framework import generics, status, authentication, permissions
-from tours.models import Tour, Booking, Agent
+from tours.models import Tour, Booking, Agent, Package
 from tours.serializers import TourSerializer, BookingSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -163,9 +163,11 @@ def Agents(request, pk):
 
 class RegisterAgent(generics.CreateAPIView):
     serializer_class = AgentSerializer
+    permission_classes = (permissions.IsAdminUser,)
     
+        
 class Package(generics.CreateAPIView):
     serializer_class = PackageSerializer
-    
+    permission_classes = (permissions.IsAdminUser,)
     
     

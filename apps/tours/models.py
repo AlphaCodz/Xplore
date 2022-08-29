@@ -58,7 +58,6 @@ class Package(models.Model):
         ("V","VIP"),
         ("VV","VVIP")
     )
-    #tour_by_Agency = models.ForeignKey(TourAgency, on_delete=models.CASCADE, null=True)
     tour = models.ForeignKey(Tour, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=20, null=True)
     type = models.CharField(max_length=3, choices=TYPE_CHOICES, default="R", null=True)
@@ -73,6 +72,7 @@ class Package(models.Model):
     price = MoneyField(max_digits=19, decimal_places=4, default_currency="NGN", null=True)
     ratings = GenericRelation(Rating)
     #agent = models.OneToOneField(Agent, on_delete=models.PROTECT, null=True)
+    
     def __str__(self):
         return f"{self.name}"
 
