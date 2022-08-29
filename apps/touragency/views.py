@@ -1,4 +1,5 @@
 from datetime import datetime
+from email import message
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from api.models import Customer
 from tours.serializers import AgentSerializer, PackageSerializer
@@ -15,6 +16,16 @@ import jwt
 from config.settings import SECRET_KEY
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.permissions import BasePermission
+
+class IsTourOwner(BasePermission):
+    message = "You are not authorised to create this package"
+    def has_permission(self, request, view):
+        email = request.user.email
+        agency = TourAgency.objects.get(email=email)
+        pk = request.POST["tour"]
+        tour = Tour.objects.get(id=pk)
+        return tour.agency == agency
 
 # Create your views here.   
 class RegisterTourAgency(generics.GenericAPIView):
@@ -160,6 +171,6 @@ class RegisterAgent(generics.CreateAPIView):
         
 class Package(generics.CreateAPIView):
     serializer_class = PackageSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (permissions.IsAuthenticated, IsTourOwner,)
     
     
