@@ -1,5 +1,4 @@
 from datetime import datetime
-#from email import message
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from api.models import Customer
 from tours.serializers import AgentSerializer, PackageSerializer, TourSerializer, BookingSerializer
@@ -9,7 +8,6 @@ from rest_framework import generics, status, authentication, permissions
 from tours.models import Tour, Booking, Agent
 from rest_framework.views import APIView
 from rest_framework.response import Response
-#from django.http import Http404
 from .serializers import TourAgencySerializer
 import jwt
 from config.settings import SECRET_KEY
@@ -172,5 +170,3 @@ class RegisterAgent(generics.CreateAPIView):
 class Package(generics.CreateAPIView):
     serializer_class = PackageSerializer
     permission_classes = (permissions.IsAuthenticated, IsTourOwner,)
-    
-    
