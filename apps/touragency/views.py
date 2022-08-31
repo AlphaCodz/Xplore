@@ -1,4 +1,5 @@
 from datetime import datetime
+#from email import message
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from api.models import Customer
 from tours.serializers import AgentSerializer, PackageSerializer, TourSerializer, BookingSerializer
@@ -8,6 +9,7 @@ from rest_framework import generics, status, authentication, permissions
 from tours.models import Tour, Booking, Agent
 from rest_framework.views import APIView
 from rest_framework.response import Response
+#from django.http import Http404
 from .serializers import TourAgencySerializer
 import jwt
 from config.settings import SECRET_KEY
@@ -52,18 +54,19 @@ def AgencyDetails(request, id):
         agency_list.append(query)
     context_data = {"Tour_Agency_list":agency_list}         
     return JsonResponse(context_data)
-
-# Add Tour
-class AddTour(generics.CreateAPIView):
-    serializer_class = TourSerializer
            
-    
-    # To view all the Tour Lists no matter the id
-class TourList(APIView):
+class AddTour(APIView):
     def get(self, request, format=None):
         snippets = Tour.objects.all()
         serializer = TourSerializer(snippets, many=True)
         return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = TourSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class TourDetail(APIView):
     def get_object(self, pk):
@@ -169,3 +172,5 @@ class RegisterAgent(generics.CreateAPIView):
 class Package(generics.CreateAPIView):
     serializer_class = PackageSerializer
     permission_classes = (permissions.IsAuthenticated, IsTourOwner,)
+    
+    
