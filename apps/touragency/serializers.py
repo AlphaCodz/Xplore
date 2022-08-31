@@ -30,9 +30,10 @@ class TourAgencySerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required = True,
         validators = [UniqueValidator(queryset= TourAgency.objects.all())]
-    )
-    password = serializers.CharField(write_only=True, required=True, validators =[validate_password])
+)
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
+    
     class Meta:
         model = TourAgency
         fields = ("name", "profile_pic", "email", "address", "license", "phone_number" ,"cac", "password", "password2")
