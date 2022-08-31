@@ -8,16 +8,9 @@ from tours.models import *
 from .serializers import AdminSerializer, ReasonSerializer
 from tours.models import Customer, Booking
 from rest_framework.views import APIView
-from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
 from tours.models import Reason
 from .models import Admin
-from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
-
-
-# class ReadOnly(BasePermission):
-#     def has_permission(self, request, view):
-#         return request.method in SAFE_METHODS
 
 # Create your views here.
 class CustomerList(generics.ListAPIView):
@@ -40,16 +33,15 @@ class CustomerList(generics.ListAPIView):
 def detail_counts(request):
     pending = Booking.objects.filter(status="P").count()
     approved = Booking.objects.filter(status="A").count()
-    declined = Booking.objects.filter(status="D").count()
-    paid = Booking.objects.filter(paid = True).count()
+    declined = Booking.objects.filter(status="D").count() 
+    paid = Booking.objects.filter(paid=True).count()
 
     query = {
         "pending":pending,
         "approved":approved,
         "declined":declined,
         "paid":paid,
-    }
-    
+    }   
     return JsonResponse(query)
 
 @api_view(["GET"])
@@ -112,6 +104,3 @@ def all_bookings(request, status):
         bookings.append(json_form)
     data = {status:bookings}
     return JsonResponse(data)
-
-
-# Register as Tour Agency

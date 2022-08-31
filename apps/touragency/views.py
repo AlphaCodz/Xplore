@@ -160,6 +160,6 @@ class RegisterAgent(generics.CreateAPIView):
         
 class Package(generics.CreateAPIView):
     serializer_class = PackageSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    # permission_classes = (permissions.IsAdminUser,)
     
     

@@ -47,10 +47,10 @@ class AdminSerializer(serializers.ModelSerializer):
         customer.password = make_password(validated_data['password'])
         customer.save()
         admin = Admin.objects.create(
+            customer = customer,
             email=validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
-            customer = customer,
             home_address = validated_data['home_address'],
             birthday = validated_data['birthday'],
             staff_number = validated_data['staff_number']

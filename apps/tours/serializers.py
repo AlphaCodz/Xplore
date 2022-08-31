@@ -1,4 +1,3 @@
-from tracemalloc import start
 from rest_framework import serializers
 from touragency.models import TourAgency
 from .models import Activity, Tour, Booking, Passport, Agent, Package, TourRequest
@@ -15,8 +14,8 @@ class TourSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "agency" , "description", "location", "start_date", "end_date", "image")
     
     def validate(self, attrs):
-        
         # Convert dt to string
+        
         starting_date = "{}".format(attrs["start_date"])
         end_date = "{}".format(attrs["end_date"])
         
