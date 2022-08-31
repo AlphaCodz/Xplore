@@ -180,7 +180,7 @@ class AgentSerializer(serializers.ModelSerializer):
         return attrs
     
     def create(self, validated_data):
-        print(self.decoded_token)
+        #print(self.decoded_token)
         agency = TourAgency.objects.get(email=self.decoded_token["agency_email"])
         agent = Agent.objects.create(
             first_name= validated_data["first_name"],
