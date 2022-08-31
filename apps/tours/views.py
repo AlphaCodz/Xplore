@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from .models import Activity, Tour, Booking, Package, Rating, TourRequest
+from .models import Activity, Tour, Booking, Package, Review, TourRequest
 from .serializers import TourSerializer, BookingSerializer, TourRequestSerializer
 from .payment import Paystack
 from rest_framework import filters
@@ -41,8 +41,8 @@ def tourPackageList(request, id):
     package_list = []
 
     for package in packages:
-        rating = Rating.objects.filter(object_id= package.id)
-        rated_by = rating.count()
+        review = Review.objects.filter(object_id= package.id)
+        rated_by = review.count()
         try:
             total_rating = sum([i.rating for i in rating]) 
             average_rating = round(total_rating/rated_by, 1)
