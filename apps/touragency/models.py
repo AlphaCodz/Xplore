@@ -8,7 +8,7 @@ class TourAgency(models.Model):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE, null=True, related_name="Agencies")
     
     name = models.CharField(max_length=100, null=True)
-    profile_pic = models.ImageField(upload_to= "media/tour_agency/profile_pic/", blank=True)
+    profile_pic = models.ImageField(upload_to= "tour_agency/profile_pic/", blank=True)
     email = models.EmailField(editable=True, unique= True, null=True)
     address = models.CharField(max_length=200, unique=True, editable=True, null=True)
     phone_number = models.BigIntegerField(unique=True, null=True)

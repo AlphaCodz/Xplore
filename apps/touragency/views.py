@@ -1,5 +1,4 @@
 from datetime import datetime
-from pyexpat.errors import messages
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from api.models import Customer
 from tours.serializers import AgentSerializer, PackageSerializer, TourSerializer, BookingSerializer
@@ -29,10 +28,10 @@ class IsAgency(BasePermission):
     message = "You are not authorized to add a Tour"
     def has_permission(self, request, view):
         email = request.user.email
-        agency_mail = TourAgency.objects.get(email=email)
-        if agency_mail.DoesNotExist:
-            return self.message
-        return True
+        agency_mail = TourAgency.objects.filter(email=email)
+        if agency_mail:
+            return True
+        return False
             
         
 
@@ -127,6 +126,7 @@ def approve_booking(request, pk):
     return Response(data, 200)
 
 @api_view(["PUT"])
+@permission_classes([IsAgency])
 def decline_booking(request, pk):
     booking = Booking.objects.get(id=pk)
     booking.status = "D"
@@ -176,9 +176,9 @@ def Agents(request, pk):
 
 class RegisterAgent(generics.CreateAPIView):
     serializer_class = AgentSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (IsAgency,)
     
         
 class Package(generics.CreateAPIView):
     serializer_class = PackageSerializer
-    permission_classes = (permissions.IsAuthenticated, IsTourOwner,)
+    permission_classes = (permissions.IsAuthenticated, IsTourOwner, IsAgency,)
